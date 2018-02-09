@@ -194,33 +194,41 @@ char* ConvertLPWSTRToLPSTR(LPWSTR lpwszStrIn)
 BOOL CALLBACK DlgProcPEDOS(HWND hDlg, UINT iMessage, UINT wParam, LONG lParam) {
 	int editID[20] = { IDC_EDIT_PE_MAGIC ,IDC_EDIT_PE_CBLP, IDC_EDIT_PE_CP ,IDC_EDIT_PE_CRLC ,IDC_EDIT_PE_CPARHDR,IDC_EDIT_PE_MINALLOC,IDC_EDIT_PE_MAXALLOC,IDC_EDIT_PE_SS,IDC_EDIT_PE_SP,IDC_EDIT_PE_CSUM,IDC_EDIT_PE_IP,IDC_EDIT_PE_CS,IDC_EDIT_PE_LFARLC,IDC_EDIT_PE_OVNO,IDC_EDIT_PE_RES,IDC_EDIT_PE_OEMID,IDC_EDIT_PE_OEMINFO,IDC_EDIT_PE_RES2,IDC_EDIT_PE_LFANEW,0 };
 	HWND editHwnd[20] = { 0 };
-	TCHAR *DOSPoint[DOS_POINT] = { NULL };
+	TCHAR *DOSPoint = NULL;
 	switch (iMessage)
 	{
 	case WM_INITDIALOG:
 	{
-		for (int i = 0; editID[i] != 0; i++)
-		{
-			editHwnd[i] = GetDlgItem(hDlg, editID[i]);
-			SetWindowText(editHwnd[i], L"00000000");
-		}
-
 		if (pointer != NULL) {
+			DOSPoint = (TCHAR*)malloc(sizeof(TCHAR)*DOS_POINT);
+			if (DOSPoint == NULL)
+			{
+				return false;
+			}
+			memset(DOSPoint, 0, sizeof(TCHAR)*DOS_POINT);
 			for (int i = 0; i < 14; i++)
 			{
-				DOSPoint[i] = getValue((pointer + (i * 2)), 2);
-				SetWindowText(editHwnd[i], DOSPoint[i]);
+				getValue((pointer + (i * 2)), 2, DOSPoint);
+				SetWindowText(editHwnd[i], (DOSPoint + (i * 2)));
 			}
-			DOSPoint[14] = getValue((pointer + (14 * 2)), (4 * 2));
-			DOSPoint[15] = getValue((pointer + (18 * 2)), 2);
-			DOSPoint[16] = getValue((pointer + (19 * 2)), 2);
-			DOSPoint[17] = getValue((pointer + (20 * 2)), (10 * 2));
-			DOSPoint[18] = getValue((pointer + (30 * 2)), 4);
-			SetWindowText(editHwnd[14], DOSPoint[14]);
-			SetWindowText(editHwnd[15], DOSPoint[15]);
-			SetWindowText(editHwnd[16], DOSPoint[16]);
-			SetWindowText(editHwnd[17], DOSPoint[17]);
-			SetWindowText(editHwnd[18], DOSPoint[18]);
+			getValue((pointer + (14 * 2)), (4 * 2), DOSPoint + 14);
+			getValue((pointer + (18 * 2)), 2, DOSPoint + 15);
+			getValue((pointer + (19 * 2)), 2, DOSPoint + 16);
+			getValue((pointer + (20 * 2)), (10 * 2), DOSPoint + 17);
+			getValue((pointer + (30 * 2)), 4, DOSPoint + 18);
+			SetWindowText(editHwnd[14], (DOSPoint + 14));
+			SetWindowText(editHwnd[15], (DOSPoint + 15));
+			SetWindowText(editHwnd[16], (DOSPoint + 16));
+			SetWindowText(editHwnd[17], (DOSPoint + 17));
+			SetWindowText(editHwnd[18], (DOSPoint + 18));
+		}
+		else
+		{
+			for (int i = 0; editID[i] != 0; i++)
+			{
+				editHwnd[i] = GetDlgItem(hDlg, editID[i]);
+				SetWindowText(editHwnd[i], L"00000000");
+			}
 		}
 		break;
 	}
@@ -230,7 +238,10 @@ BOOL CALLBACK DlgProcPEDOS(HWND hDlg, UINT iMessage, UINT wParam, LONG lParam) {
 		{
 		case IDC_PE_BTN_SUMBIT:
 		{
-			freeSpace(DOSPoint);
+			if (DOSPoint != NULL)
+			{
+				free(DOSPoint);
+			}
 			EndDialog(hDlg, 0);
 			break;
 		}
@@ -239,7 +250,10 @@ BOOL CALLBACK DlgProcPEDOS(HWND hDlg, UINT iMessage, UINT wParam, LONG lParam) {
 	}
 	case WM_CLOSE:
 	{
-		freeSpace(DOSPoint);
+		if (DOSPoint != NULL)
+		{
+			free(DOSPoint);
+		}
 		EndDialog(hDlg, 0);
 		break;
 	}
@@ -247,32 +261,14 @@ BOOL CALLBACK DlgProcPEDOS(HWND hDlg, UINT iMessage, UINT wParam, LONG lParam) {
 	return false;
 }
 
-TCHAR * getValue(BYTE *pointerValue, int number) {
-	int numberOfElements = sizeof(TCHAR)*number + 0x01;
-	TCHAR *value = NULL;
-	value = (TCHAR *)malloc(numberOfElements);
-	if (value == NULL)
-	{
-		return 0;
-	}
-	if (number <= 20) {
-		for (int i = number - 1; i >= 0; i--)
-		{
-			TCHAR *temTcahValue = NULL;
-			temTcahValue = (TCHAR *)malloc(sizeof(TCHAR) * 0x03);
-			if (temTcahValue == NULL) {
-				return value;
-			}
-			memset(temTcahValue, 0L, sizeof(TCHAR) * 0x03);
-			_itow_s(*(pointerValue + i), temTcahValue, 6, 16);
-			/*if (_tcslen(temTcahValue) == 1) {
+void getValue(BYTE *pointerValue, int number, TCHAR *Tvlue) {
 
-			}*/
-			wcsncat_s(value, numberOfElements, temTcahValue, wcslen(temTcahValue));
-			free(temTcahValue);
-		}
+	for (int i = number - 1, j = 0; i >= 0; i--, j++)
+	{
+		*(Tvlue + j) = *(pointerValue + i);
+		
 	}
-	return value;
+
 }
 
 /*释放指针数组*/

@@ -2,7 +2,7 @@
 #ifndef _PE_PETOOLS_H
 #define _PE_PETOOLS_H
 
-#define DOS_POINT 20
+#define DOS_POINT 100
 
 HINSTANCE PEInstance = NULL;
 HWND staticDlg = NULL;
@@ -13,7 +13,7 @@ void selectFile(HWND hDlg);
 void PEfun(TCHAR *path);
 void freeSpace(TCHAR *point[]);
 char* ConvertLPWSTRToLPSTR(LPWSTR lpwszStrIn);
-TCHAR* getValue(BYTE *pointerValue, int number);
+void getValue(BYTE *pointerValue, int number, TCHAR *Tvlue);
 
 BOOL CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, UINT wParam, LONG lParam);
 BOOL CALLBACK DlgProcPEDOS(HWND hDlg, UINT iMessage, UINT wParam, LONG lParam);
