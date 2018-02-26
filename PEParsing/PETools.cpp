@@ -42,6 +42,10 @@ BOOL CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, UINT wParam, LONG lParam) 
 			staticDlg = GetDlgItem(hDlg, IDC_TEXT_PE);
 		}
 		SendMessage(staticDlg, WM_SETTEXT, NULL, (LPARAM)L"请选择文件。");
+		HWND tabContron = GetDlgItem(hDlg, IDC_TAB_FILEORPE);
+		TabCtrl_InsertItem(tabContron, 0, "参数1");
+		TabCtrl_InsertItem(tabContron, 1, "参数2");
+		
 		break;
 	}
 	case WM_COMMAND:
@@ -262,13 +266,25 @@ BOOL CALLBACK DlgProcPEDOS(HWND hDlg, UINT iMessage, UINT wParam, LONG lParam) {
 }
 
 void getValue(BYTE *pointerValue, int number, TCHAR *Tvlue) {
-
+	char *charTem = NULL;
+	charTem = (char*)malloc(0x400);
+	if (charTem == NULL)
+	{
+		return; 
+	}
+	memset(charTem, 0, 0x400);
 	for (int i = number - 1, j = 0; i >= 0; i--, j++)
 	{
-		*(Tvlue + j) = *(pointerValue + i);
-		
+		*(charTem + j) = *(pointerValue + i);
 	}
-
+	for (int i = 0; *(charTem + i) != 0; i++)
+	{
+		*(Tvlue + i) = *(charTem+i);
+	}
+	if (charTem != NULL)
+	{
+		free(charTem);
+	}
 }
 
 /*释放指针数组*/
