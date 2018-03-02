@@ -15,6 +15,7 @@ void freeSpace(TCHAR *point[]);
 char* ConvertLPWSTRToLPSTR(LPWSTR lpwszStrIn);
 void getValue(BYTE *pointerValue, int number, TCHAR *Tvlue);
 
-BOOL CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, UINT wParam, LONG lParam);
-BOOL CALLBACK DlgProcPEDOS(HWND hDlg, UINT iMessage, UINT wParam, LONG lParam);
+INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK DlgProcPEDOS(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lParam);
+
 #endif

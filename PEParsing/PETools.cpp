@@ -28,23 +28,21 @@ void selectFile(HWND hDlg) {
 void CreatePEDialog(HINSTANCE thisInstance, HWND hDlg) {
 	PEInstance = thisInstance;
 	if (PEInstance != NULL) {
-		DialogBox(PEInstance, MAKEINTRESOURCE(IDD_DIALOG_PETOOLS), hDlg, DlgProcPEFile);
+		DialogBox(PEInstance, MAKEINTRESOURCE(IDD_DIALOG_PETOOLS), hDlg, (DLGPROC)DlgProcPEFile);
 	}
 }
 
 //打开pe回掉
-BOOL CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, UINT wParam, LONG lParam) {
+INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	switch (iMessage)
 	{
 	case WM_INITDIALOG:
 	{
+
 		if (staticDlg == NULL) {
 			staticDlg = GetDlgItem(hDlg, IDC_TEXT_PE);
 		}
 		SendMessage(staticDlg, WM_SETTEXT, NULL, (LPARAM)L"请选择文件。");
-		HWND tabContron = GetDlgItem(hDlg, IDC_TAB_FILEORPE);
-		TabCtrl_InsertItem(tabContron, 0, "参数1");
-		TabCtrl_InsertItem(tabContron, 1, "参数2");
 		
 		break;
 	}
@@ -87,7 +85,7 @@ BOOL CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, UINT wParam, LONG lParam) 
 		case IDC_PE_D:
 		{
 			if (PEInstance != NULL) {
-				DialogBox(PEInstance, MAKEINTRESOURCE(IDD_PE_DIALOG_DOS), hDlg, DlgProcPEDOS);
+				DialogBox(PEInstance, MAKEINTRESOURCE(IDD_PE_DIALOG_DOS), hDlg, (DLGPROC)DlgProcPEDOS);
 			}
 			break;
 		}
@@ -195,7 +193,7 @@ char* ConvertLPWSTRToLPSTR(LPWSTR lpwszStrIn)
 }
 
 /*DOS*/
-BOOL CALLBACK DlgProcPEDOS(HWND hDlg, UINT iMessage, UINT wParam, LONG lParam) {
+INT_PTR CALLBACK DlgProcPEDOS(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	int editID[20] = { IDC_EDIT_PE_MAGIC ,IDC_EDIT_PE_CBLP, IDC_EDIT_PE_CP ,IDC_EDIT_PE_CRLC ,IDC_EDIT_PE_CPARHDR,IDC_EDIT_PE_MINALLOC,IDC_EDIT_PE_MAXALLOC,IDC_EDIT_PE_SS,IDC_EDIT_PE_SP,IDC_EDIT_PE_CSUM,IDC_EDIT_PE_IP,IDC_EDIT_PE_CS,IDC_EDIT_PE_LFARLC,IDC_EDIT_PE_OVNO,IDC_EDIT_PE_RES,IDC_EDIT_PE_OEMID,IDC_EDIT_PE_OEMINFO,IDC_EDIT_PE_RES2,IDC_EDIT_PE_LFANEW,0 };
 	HWND editHwnd[20] = { 0 };
 	TCHAR *DOSPoint = NULL;
