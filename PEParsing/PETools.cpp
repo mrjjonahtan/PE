@@ -44,11 +44,6 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 			staticDlg = GetDlgItem(hDlg, IDC_TEXT_PE);
 		}
 		SendMessage(staticDlg, WM_SETTEXT, NULL, (LPARAM)L"ÇëÑ¡ÔñÎÄ¼þ¡£");
-<<<<<<< HEAD
-
-=======
-		
->>>>>>> 61b06467431b9968a9f6babd0f5164b30c64732f
 		break;
 	}
 	case WM_COMMAND:
