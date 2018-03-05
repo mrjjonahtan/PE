@@ -7,6 +7,7 @@
 HINSTANCE PEInstance = NULL;
 HWND staticDlg = NULL;
 BYTE *pointer = NULL;
+PeFile *pef = NULL;
 
 void CreatePEDialog(HINSTANCE thisInstance, HWND hDlg);
 void selectFile(HWND hDlg);

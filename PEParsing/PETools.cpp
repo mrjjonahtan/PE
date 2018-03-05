@@ -1,6 +1,8 @@
 #include "stdafx.h"
-#include "PETools.h"
 #include "PeFile.h"
+#include "PETools.h"
+#include "PeToolsClass.h"
+
 
 //打开窗口
 void selectFile(HWND hDlg) {
@@ -94,8 +96,9 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 		case IDC_PE_F:
 		{
 			if (PEInstance != NULL) {
-				PeFile *pef = new PeFile();
-				pef->creadPEFileDialog(PEInstance);
+				pef = new PeFile();
+				pef->creadPEFileDialog(PEInstance, pointer);
+				pef = NULL;
 				delete(pef);
 			}
 			break;
@@ -208,6 +211,7 @@ INT_PTR CALLBACK DlgProcPEDOS(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lP
 	case WM_INITDIALOG:
 	{
 		if (pointer != NULL) {
+			PeToolsClass petc;
 			for (int i = 0; i < 20 && editID[i] != 0; i++)
 			{
 				editHwnd[i] = GetDlgItem(hDlg, editID[i]);
@@ -219,29 +223,26 @@ INT_PTR CALLBACK DlgProcPEDOS(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lP
 				return false;
 			}
 			memset(DOSPoint, 0, sizeof(TCHAR)*DOS_POINT);
-
-			//getValue((pointer), 2, DOSPoint);
-			//SetWindowText(editHwnd[0], L"222");
 			for (int i = 0; i < 14; i++)
 			{
 				if (i == 0)
 				{
-					getValue((pointer), 2, DOSPoint);
+					petc.getValue((pointer), 2, DOSPoint);
 					SetWindowText(editHwnd[i], DOSPoint);
 				}
 				else
 				{
-					getValue((pointer + (i * 2)), 2, DOSPoint + (i * 4 + i));
+					petc.getValue((pointer + (i * 2)), 2, DOSPoint + (i * 4 + i));
 					SetWindowText(editHwnd[i], (DOSPoint + (i * 4 + i)));
 				}
 
 			}
 
-			getValue((pointer + (14 * 2)), (4 * 2), DOSPoint + 65);
-			getValue((pointer + (18 * 2)), 2, DOSPoint + 98);
-			getValue((pointer + (19 * 2)), 2, DOSPoint + 107);
-			getValue((pointer + (20 * 2)), (10 * 2), DOSPoint + 116);
-			getValue((pointer + (30 * 2)), 4, DOSPoint + 196);
+			petc.getValue((pointer + (14 * 2)), (4 * 2), DOSPoint + 65);
+			petc.getValue((pointer + (18 * 2)), 2, DOSPoint + 98);
+			petc.getValue((pointer + (19 * 2)), 2, DOSPoint + 107);
+			petc.getValue((pointer + (20 * 2)), (10 * 2), DOSPoint + 116);
+			petc.getValue((pointer + (30 * 2)), 4, DOSPoint + 196);
 			SetWindowText(editHwnd[14], (DOSPoint + 65));
 			SetWindowText(editHwnd[15], (DOSPoint + 98));
 			SetWindowText(editHwnd[16], (DOSPoint + 107));
@@ -286,7 +287,7 @@ INT_PTR CALLBACK DlgProcPEDOS(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lP
 	}
 	return false;
 }
-
+/*
 void getValue(BYTE *pointerValue, int number, TCHAR *tvlue) {
 	char *vaby = NULL;
 	vaby = (char*)malloc(0x200);
@@ -310,7 +311,7 @@ void getValue(BYTE *pointerValue, int number, TCHAR *tvlue) {
 		free(vaby);
 	}
 }
-
+*/
 /*释放指针数组*/
 void freeSpace(TCHAR *point[]) {
 	for (int i = 0; i < DOS_POINT; i++) {
