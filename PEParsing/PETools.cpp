@@ -2,7 +2,7 @@
 #include "PETools.h"
 #include "PeFile.h"
 
-//打开窗口222222222222222222222222222222222222
+//打开窗口
 void selectFile(HWND hDlg) {
 	OPENFILENAME ofn;
 	ZeroMemory(&ofn, sizeof(ofn));
