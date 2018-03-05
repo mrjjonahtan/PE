@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "PeFile.h"
+#include "PeOptional.h"
 #include "PETools.h"
 #include "PeToolsClass.h"
 
@@ -83,7 +84,13 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 		}
 		case IDC_PE_O:
 		{
-
+			if (PEInstance != NULL)
+			{
+				peo = new PeOptional();
+				peo->creadPEOptionalDialog(PEInstance, pointer);
+				delete(peo);
+				peo = NULL;
+			}
 			break;
 		}
 		case IDC_PE_D:
@@ -98,8 +105,8 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 			if (PEInstance != NULL) {
 				pef = new PeFile();
 				pef->creadPEFileDialog(PEInstance, pointer);
-				pef = NULL;
 				delete(pef);
+				pef = NULL;
 			}
 			break;
 		}
