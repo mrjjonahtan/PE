@@ -29,7 +29,7 @@ void selectFile(HWND hDlg) {
 void CreatePEDialog(HINSTANCE thisInstance, HWND hDlg) {
 	PEInstance = thisInstance;
 	if (PEInstance != NULL) {
-		DialogBox(PEInstance, MAKEINTRESOURCE(IDD_DIALOG_PETOOLS), hDlg, DlgProcPEFile);
+		DialogBox(PEInstance, MAKEINTRESOURCE(IDD_DIALOG_PETOOLS), hDlg, (DLGPROC)DlgProcPEFile);
 	}
 }
 
@@ -39,11 +39,13 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 	{
 	case WM_INITDIALOG:
 	{
+
 		if (staticDlg == NULL) {
 			staticDlg = GetDlgItem(hDlg, IDC_TEXT_PE);
 		}
 		SendMessage(staticDlg, WM_SETTEXT, NULL, (LPARAM)L"ÇëÑ¡ÔñÎÄ¼þ¡£");
-
+		
+		
 		break;
 	}
 	case WM_COMMAND:
@@ -85,7 +87,7 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 		case IDC_PE_D:
 		{
 			if (PEInstance != NULL) {
-				DialogBox(PEInstance, MAKEINTRESOURCE(IDD_PE_DIALOG_DOS), hDlg, DlgProcPEDOS);
+				DialogBox(PEInstance, MAKEINTRESOURCE(IDD_PE_DIALOG_DOS), hDlg, (DLGPROC)DlgProcPEDOS);
 			}
 			break;
 		}
