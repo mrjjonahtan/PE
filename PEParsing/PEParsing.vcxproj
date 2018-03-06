@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="PeDirectory.h" />
     <ClInclude Include="PeFile.h" />
     <ClInclude Include="PeOptional.h" />
     <ClInclude Include="PEParsing.h" />
@@ -153,6 +154,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="PeDirectory.cpp" />
     <ClCompile Include="PeFile.cpp" />
     <ClCompile Include="PeOptional.cpp" />
     <ClCompile Include="PEParsing.cpp" />

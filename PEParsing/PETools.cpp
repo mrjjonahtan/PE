@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "PeFile.h"
 #include "PeOptional.h"
+#include "PeDirectory.h"
 #include "PETools.h"
 #include "PeToolsClass.h"
 
@@ -47,8 +48,8 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 			staticDlg = GetDlgItem(hDlg, IDC_TEXT_PE);
 		}
 		SendMessage(staticDlg, WM_SETTEXT, NULL, (LPARAM)L"ÇëÑ¡ÔñÎÄ¼þ¡£");
-		
-		
+
+
 		break;
 	}
 	case WM_COMMAND:
@@ -74,7 +75,17 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 		}
 		case IDC_PE_L:
 		{
-
+			if (PEInstance != NULL)
+			{
+				ped = new PeDirectory();
+				if (ped != NULL)
+				{
+					ped->creadPEDirectoryDialog(PEInstance, pointer);
+					delete(ped);
+					ped = NULL;
+				}
+				
+			}
 			break;
 		}
 		case IDC_PE_I:
@@ -87,9 +98,13 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 			if (PEInstance != NULL)
 			{
 				peo = new PeOptional();
-				peo->creadPEOptionalDialog(PEInstance, pointer);
-				delete(peo);
-				peo = NULL;
+				if (peo != NULL)
+				{
+					peo->creadPEOptionalDialog(PEInstance, pointer);
+					delete(peo);
+					peo = NULL;
+				}
+				
 			}
 			break;
 		}
@@ -104,9 +119,13 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 		{
 			if (PEInstance != NULL) {
 				pef = new PeFile();
-				pef->creadPEFileDialog(PEInstance, pointer);
-				delete(pef);
-				pef = NULL;
+				if (pef != NULL)
+				{
+					pef->creadPEFileDialog(PEInstance, pointer);
+					delete(pef);
+					pef = NULL;
+				}
+				
 			}
 			break;
 		}

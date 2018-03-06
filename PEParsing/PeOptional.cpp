@@ -125,6 +125,7 @@ INT_PTR CALLBACK PeOptionalDialog(HWND hDlg, UINT iMessage, WPARAM wParam, LPARA
 			if (optioBUffer != NULL)
 			{
 				free(optioBUffer);
+				optioBUffer = NULL;
 			}
 		}
 		break;
