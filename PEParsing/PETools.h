@@ -10,6 +10,7 @@ BYTE *pointer = NULL;
 PeFile *pef = NULL;
 PeOptional *peo = NULL;
 PeDirectory *ped = NULL;
+PESection *pes = NULL;
 
 void CreatePEDialog(HINSTANCE thisInstance, HWND hDlg);
 void selectFile(HWND hDlg);

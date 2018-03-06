@@ -147,6 +147,7 @@
     <ClInclude Include="PeFile.h" />
     <ClInclude Include="PeOptional.h" />
     <ClInclude Include="PEParsing.h" />
+    <ClInclude Include="PESection.h" />
     <ClInclude Include="PETools.h" />
     <ClInclude Include="PeToolsClass.h" />
     <ClInclude Include="resource.h" />
@@ -158,6 +159,7 @@
     <ClCompile Include="PeFile.cpp" />
     <ClCompile Include="PeOptional.cpp" />
     <ClCompile Include="PEParsing.cpp" />
+    <ClCompile Include="PESection.cpp" />
     <ClCompile Include="PETools.cpp" />
     <ClCompile Include="PeToolsClass.cpp" />
     <ClCompile Include="stdafx.cpp">
