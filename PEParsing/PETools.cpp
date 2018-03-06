@@ -140,6 +140,10 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 			}
 			break;
 		}
+		case IDC_PE_E:
+		{
+			break;
+		}
 		case IDC_PE_FILE_MESSAGE:
 		{
 
