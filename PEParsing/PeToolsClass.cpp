@@ -69,10 +69,21 @@ DWORD PeToolsClass::getSectionNumber(BYTE *pointerValue)
 
 void PeToolsClass::getCharPointer(BYTE *pointerValue, TCHAR *tvlue, int max)
 {
-	for (int i = 0; pointerValue[i] != 0 && i < max; i++)
+	if (max == 0)
 	{
-		tvlue[i] = pointerValue[i];
+		for (int i = 0; pointerValue[i] != 0 ; i++)
+		{
+			tvlue[i] = pointerValue[i];
+		}
 	}
+	else
+	{
+		for (int i = 0; pointerValue[i] != 0 && i < max; i++)
+		{
+			tvlue[i] = pointerValue[i];
+		}
+	}
+	
 }
 
 DWORD PeToolsClass::rvaTofoa(BYTE *pointerValue, DWORD RVA)
