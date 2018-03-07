@@ -11,5 +11,9 @@ public:
 	DWORD getOptionSizeValue(BYTE *pointerValue);
 	DWORD getSectionNumber(BYTE *pointerValue);
 	void getCharPointer(BYTE *pointerValue, TCHAR *tvlue, int max);
+	DWORD getAlignData(DWORD data,DWORD alig);
+	DWORD rvaTofoa(BYTE *pointerValue,DWORD RVA);
+	DWORD foaTorva(BYTE *pointerValue, DWORD FOA);
+
 };
 

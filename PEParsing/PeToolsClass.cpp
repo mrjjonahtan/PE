@@ -74,3 +74,93 @@ void PeToolsClass::getCharPointer(BYTE *pointerValue, TCHAR *tvlue, int max)
 		tvlue[i] = pointerValue[i];
 	}
 }
+
+DWORD PeToolsClass::rvaTofoa(BYTE *pointerValue, DWORD RVA)
+{
+	struct mSection {
+		union
+		{
+			DWORD PhysicalAddress;
+			DWORD virtualSize;
+		} Misc;
+		DWORD virtualAddress;
+		DWORD sizeOfRawData;
+		DWORD pointertorawdata;
+	};
+	DWORD rtf = 0;
+	DWORD pelocat = getPELocation(pointerValue);
+	DWORD optionSize = getOptionSizeValue(pointerValue);
+	int snumber = getSectionNumber(pointerValue);
+
+	mSection section[10] = { 0 };
+
+	for (int i = 0; i < snumber; i++)
+	{
+		DWORD locat = i * 40;
+		section[i].Misc.virtualSize = getDWValue((pointerValue + pelocat + optionSize + 24 + 8 + locat), 4);
+		section[i].virtualAddress = getDWValue((pointerValue + pelocat + optionSize + 24 + 12 + locat), 4);
+		section[i].sizeOfRawData = getDWValue((pointerValue + pelocat + optionSize + 24 + 16 + locat), 4);
+		section[i].pointertorawdata = getDWValue((pointerValue + pelocat + optionSize + 24 + 20 + locat), 4);
+	}
+	for (int i = 0; i < snumber; i++)
+	{
+		if (RVA >= section[i].virtualAddress && RVA < (getAlignData(section[i].Misc.virtualSize, 0x1000) + section[i].virtualAddress))
+		{
+			rtf = (RVA - section[i].virtualAddress) + section[i].pointertorawdata;
+		}
+	}
+
+	return rtf;
+}
+
+DWORD PeToolsClass::foaTorva(BYTE *pointerValue, DWORD FOA)
+{
+	struct mSection {
+		union
+		{
+			DWORD PhysicalAddress;
+			DWORD virtualSize;
+		} Misc;
+		DWORD virtualAddress;
+		DWORD sizeOfRawData;
+		DWORD pointertorawdata;
+	};
+	DWORD ftr = 0;
+	DWORD pelocat = getPELocation(pointerValue);
+	DWORD optionSize = getOptionSizeValue(pointerValue);
+	int snumber = getSectionNumber(pointerValue);
+
+	mSection section[10] = { 0 };
+
+	for (int i = 0; i < snumber; i++)
+	{
+		DWORD locat = i * 40;
+		section[i].Misc.virtualSize = getDWValue((pointerValue + pelocat + optionSize + 24 + 8 + locat), 4);
+		section[i].virtualAddress = getDWValue((pointerValue + pelocat + optionSize + 24 + 12 + locat), 4);
+		section[i].sizeOfRawData = getDWValue((pointerValue + pelocat + optionSize + 24 + 16 + locat), 4);
+		section[i].pointertorawdata = getDWValue((pointerValue + pelocat + optionSize + 24 + 20 + locat), 4);
+	}
+	for (int i = 0; i < snumber; i++)
+	{
+		if (FOA >= section[i].pointertorawdata && FOA <  section[i].sizeOfRawData + section[i].pointertorawdata)
+		{
+			ftr = (FOA - section[i].pointertorawdata) + section[i].virtualAddress;
+		}
+	}
+	return ftr;
+}
+
+DWORD PeToolsClass::getAlignData(DWORD data, DWORD alig)
+{
+	DWORD revalue = 0;
+	revalue = data % alig;
+	if (revalue != 0)
+	{
+		revalue = (data - revalue) + alig;
+	}
+	else
+	{
+		revalue = data;
+	}
+	return revalue;
+}

@@ -57,6 +57,8 @@ INT_PTR CALLBACK PeDirectoryDialog(HWND hDlg, UINT iMessage, WPARAM wParam, LPAR
 
 			DWORD directoryLocat = petc.getDWValue((ped->pointer + 60), 4) + 24 + 96;
 
+
+
 			for (int i = 0; i < 32; i++)
 			{
 				petc.getValue((ped->pointer + directoryLocat + (i * 4)), 4, (temporaryBUffer+(i*9)));

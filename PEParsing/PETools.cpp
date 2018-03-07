@@ -3,6 +3,7 @@
 #include "PeOptional.h"
 #include "PeDirectory.h"
 #include "PESection.h"
+#include "PEExport.h"
 #include "PETools.h"
 #include "PeToolsClass.h"
 
@@ -142,6 +143,16 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 		}
 		case IDC_PE_E:
 		{
+			if (PEInstance != NULL) {
+				pee = new PEExport();
+				if (pee != NULL)
+				{
+					pee->creadPEExportDialog(PEInstance, pointer);
+					delete(pee);
+					pee = NULL;
+				}
+
+			}
 			break;
 		}
 		case IDC_PE_FILE_MESSAGE:
