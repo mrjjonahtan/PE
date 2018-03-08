@@ -7,7 +7,9 @@ public:
 	BYTE * pointer = NULL;
 private:
 	void initList(HWND hDlg);
-	void insterList(HWND hDlg,int number,TCHAR *numberTC, TCHAR *characterOne, TCHAR *characterTWO);
+	void enumModules(HWND hDlg, WPARAM wParam, LPARAM lParam);
+	void disBlocksMembers(HWND membersHwnd,DWORD offset);
+	void insterList(HWND blockHwnd,int number,TCHAR *numberTC, TCHAR *characterOne, TCHAR *characterTWO, TCHAR *characterThree);
 public:
 	PERelocation();
 	~PERelocation();
