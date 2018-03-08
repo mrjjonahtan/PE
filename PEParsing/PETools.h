@@ -12,6 +12,7 @@ PeOptional *peo = NULL;
 PeDirectory *ped = NULL;
 PESection *pes = NULL;
 PEExport *pee = NULL;
+PERelocation *per = NULL;
 
 void CreatePEDialog(HINSTANCE thisInstance, HWND hDlg);
 void selectFile(HWND hDlg);

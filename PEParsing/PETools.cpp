@@ -4,6 +4,7 @@
 #include "PeDirectory.h"
 #include "PESection.h"
 #include "PEExport.h"
+#include "PERelocation.h"
 #include "PETools.h"
 #include "PeToolsClass.h"
 
@@ -65,9 +66,17 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 		}
 		case IDC_PE_B:
 		{
-			TCHAR fd[0x400] = { 0 };
-			SendMessage(staticDlg, WM_GETTEXT, 0x400, (LPARAM)fd);
-			OutputDebugString(fd);
+			if (PEInstance != NULL)
+			{
+				per = new PERelocation();
+				if (per != NULL)
+				{
+					per->creadPERelocationDialog(PEInstance, pointer);
+					delete(per);
+					per = NULL;
+				}
+
+			}
 			break;
 		}
 		case IDC_PE_S:
@@ -96,7 +105,7 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 					delete(ped);
 					ped = NULL;
 				}
-				
+
 			}
 			break;
 		}
@@ -116,7 +125,7 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 					delete(peo);
 					peo = NULL;
 				}
-				
+
 			}
 			break;
 		}
@@ -137,7 +146,7 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 					delete(pef);
 					pef = NULL;
 				}
-				
+
 			}
 			break;
 		}
