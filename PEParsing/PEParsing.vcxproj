@@ -146,6 +146,7 @@
     <ClInclude Include="PeDirectory.h" />
     <ClInclude Include="PEExport.h" />
     <ClInclude Include="PeFile.h" />
+    <ClInclude Include="PEImport.h" />
     <ClInclude Include="PeOptional.h" />
     <ClInclude Include="PEParsing.h" />
     <ClInclude Include="PERelocation.h" />
@@ -160,6 +161,7 @@
     <ClCompile Include="PeDirectory.cpp" />
     <ClCompile Include="PEExport.cpp" />
     <ClCompile Include="PeFile.cpp" />
+    <ClCompile Include="PEImport.cpp" />
     <ClCompile Include="PeOptional.cpp" />
     <ClCompile Include="PEParsing.cpp" />
     <ClCompile Include="PERelocation.cpp" />

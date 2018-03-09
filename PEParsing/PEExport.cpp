@@ -55,8 +55,16 @@ INT_PTR CALLBACK peExportDialog(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM 
 
 			memset(temporaryBUffer, 0, sizeof(TCHAR) * 0x40);
 			DWORD directoryLocat = petc.getDWValue((pee->pointer + 60), 4) + 24 + 96;
-			//DWORD exportRVA = petc.getDWValue((pee->pointer + directoryLocat), 4);
-			DWORD exportFOA = petc.rvaTofoa((pee->pointer), petc.getDWValue((pee->pointer + directoryLocat), 4));
+			DWORD exportRVA = petc.getDWValue((pee->pointer + directoryLocat), 4);
+			if (exportRVA == 0)
+			{
+				for (int i = 0; i < 10; i++)
+				{
+					SetWindowText(pee->editHwnd[i], L"00000000");
+				}
+				break;
+			}
+			DWORD exportFOA = petc.rvaTofoa((pee->pointer), exportRVA);
 			wsprintf(temporaryBUffer, L"%02X", exportFOA);
 			SetWindowText(pee->editHwnd[0], temporaryBUffer);
 			petc.getValue((pee->pointer + exportFOA), 4, temporaryBUffer + 9);

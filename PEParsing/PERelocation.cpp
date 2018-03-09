@@ -44,8 +44,12 @@ INT_PTR CALLBACK peRelocationDialog(HWND hDlg, UINT iMessage, WPARAM wParam, LPA
 			}
 			memset(temporaryBUffer, 0, sizeof(TCHAR) * 0x30);
 			DWORD directoryLocat = petc.getDWValue((per->pointer + 60), 4) + 24 + 96;
-			//DWORD RelocationRVA = petc.getDWValue((per->pointer + directoryLocat + (10 * 4)), 4);
-			DWORD RelocationFOA = petc.rvaTofoa(per->pointer, petc.getDWValue((per->pointer + directoryLocat + (10 * 4)), 4));
+			DWORD RelocationRVA = petc.getDWValue((per->pointer + directoryLocat + (10 * 4)), 4);
+			if (RelocationRVA == 0)
+			{
+				break;
+			}
+			DWORD RelocationFOA = petc.rvaTofoa(per->pointer, RelocationRVA);
 			HWND blockHwnd = GetDlgItem(hDlg, IDC_LIST_PE_RELOCATION_BLOCKS);
 			int i = 0;
 			while (true)
