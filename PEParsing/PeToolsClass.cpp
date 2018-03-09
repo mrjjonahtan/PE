@@ -71,7 +71,7 @@ void PeToolsClass::getCharPointer(BYTE *pointerValue, TCHAR *tvlue, int max)
 {
 	if (max == 0)
 	{
-		for (int i = 0; pointerValue[i] != 0 ; i++)
+		for (int i = 0; pointerValue[i] != 0; i++)
 		{
 			tvlue[i] = pointerValue[i];
 		}
@@ -83,7 +83,7 @@ void PeToolsClass::getCharPointer(BYTE *pointerValue, TCHAR *tvlue, int max)
 			tvlue[i] = pointerValue[i];
 		}
 	}
-	
+
 }
 
 DWORD PeToolsClass::rvaTofoa(BYTE *pointerValue, DWORD RVA)
@@ -113,14 +113,21 @@ DWORD PeToolsClass::rvaTofoa(BYTE *pointerValue, DWORD RVA)
 		section[i].sizeOfRawData = getDWValue((pointerValue + pelocat + optionSize + 24 + 16 + locat), 4);
 		section[i].pointertorawdata = getDWValue((pointerValue + pelocat + optionSize + 24 + 20 + locat), 4);
 	}
-	for (int i = 0; i < snumber; i++)
+
+	if (RVA < section[0].virtualAddress)
 	{
-		if (RVA >= section[i].virtualAddress && RVA < (getAlignData(section[i].Misc.virtualSize, 0x1000) + section[i].virtualAddress))
+		rtf = RVA;
+	}
+	else
+	{
+		for (int i = 0; i < snumber; i++)
 		{
-			rtf = (RVA - section[i].virtualAddress) + section[i].pointertorawdata;
+			if (RVA >= section[i].virtualAddress && RVA < (getAlignData(section[i].Misc.virtualSize, 0x1000) + section[i].virtualAddress))
+			{
+				rtf = (RVA - section[i].virtualAddress) + section[i].pointertorawdata;
+			}
 		}
 	}
-
 	return rtf;
 }
 
@@ -153,7 +160,7 @@ DWORD PeToolsClass::foaTorva(BYTE *pointerValue, DWORD FOA)
 	}
 	for (int i = 0; i < snumber; i++)
 	{
-		if (FOA >= section[i].pointertorawdata && FOA <  section[i].sizeOfRawData + section[i].pointertorawdata)
+		if (FOA >= section[i].pointertorawdata && FOA < section[i].sizeOfRawData + section[i].pointertorawdata)
 		{
 			ftr = (FOA - section[i].pointertorawdata) + section[i].virtualAddress;
 		}

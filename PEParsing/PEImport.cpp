@@ -74,6 +74,33 @@ INT_PTR CALLBACK peImportDialog(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM 
 
 				pei->insterList(importHwnd, i, temporaryBUffer + 27, temporaryBUffer + 18, temporaryBUffer + 9, temporaryBUffer);
 			}
+
+			/*DWORD boundImportRVA = petc.getDWValue((pei->pointer + directoryLocat + 88), 4);
+			if (boundImportRVA != 0)
+			{
+				DWORD boundImportFOA = petc.rvaTofoa(pei->pointer, boundImportRVA);
+				
+				for (int i = 0; ; i++)
+				{
+					memset(temporaryBUffer, 0, sizeof(TCHAR) * 0x100);
+					DWORD timeDateStamp = petc.getDWValue(pei->pointer + boundImportFOA , 4);
+					WORD offsetModulNmae = petc.getDWValue(pei->pointer + boundImportFOA + 4, 2);
+					WORD numberOfModuleForwarderRefs = petc.getDWValue(pei->pointer + boundImportFOA + 6, 2);
+					if (offsetModulNmae == 0)
+					{
+						break;
+					}
+					DWORD nameRVA = offsetModulNmae + boundImportFOA;
+					DWORD nameFOA = petc.rvaTofoa(pei->pointer, nameRVA);
+
+					wsprintf(temporaryBUffer, L"%08X", timeDateStamp);
+					petc.getCharPointer(pei->pointer + nameFOA, temporaryBUffer + 9, 0);
+
+					pei->insterList(importHwnd, i, temporaryBUffer + 9, L"FFFFFFFF", temporaryBUffer, L"FFFFFFFF");
+
+					boundImportFOA = boundImportFOA + (numberOfModuleForwarderRefs * 8);
+				}
+			}*/
 			if (temporaryBUffer != NULL)
 			{
 				free(temporaryBUffer);
