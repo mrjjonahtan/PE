@@ -100,26 +100,22 @@ DWORD PeToolsClass::rvaTofoa(BYTE *pointerValue, DWORD RVA)
 	};
 	DWORD rtf = 0;
 	DWORD pelocat = getPELocation(pointerValue);
-	DWORD optionSize = getOptionSizeValue(pointerValue);
-	int snumber = getSectionNumber(pointerValue);
-
-	mSection section[10] = { 0 };
-
-	for (int i = 0; i < snumber; i++)
+	DWORD sizeOfHeaders = getDWValue((pointerValue + pelocat + 24 + 60), 4);
+	if (RVA > sizeOfHeaders)
 	{
-		DWORD locat = i * 40;
-		section[i].Misc.virtualSize = getDWValue((pointerValue + pelocat + optionSize + 24 + 8 + locat), 4);
-		section[i].virtualAddress = getDWValue((pointerValue + pelocat + optionSize + 24 + 12 + locat), 4);
-		section[i].sizeOfRawData = getDWValue((pointerValue + pelocat + optionSize + 24 + 16 + locat), 4);
-		section[i].pointertorawdata = getDWValue((pointerValue + pelocat + optionSize + 24 + 20 + locat), 4);
-	}
+		DWORD optionSize = getOptionSizeValue(pointerValue);
+		int snumber = getSectionNumber(pointerValue);
+		mSection section[10] = { 0 };
 
-	if (RVA < section[0].virtualAddress)
-	{
-		rtf = RVA;
-	}
-	else
-	{
+		for (int i = 0; i < snumber; i++)
+		{
+			DWORD locat = i * 40;
+			section[i].Misc.virtualSize = getDWValue((pointerValue + pelocat + optionSize + 24 + 8 + locat), 4);
+			section[i].virtualAddress = getDWValue((pointerValue + pelocat + optionSize + 24 + 12 + locat), 4);
+			section[i].sizeOfRawData = getDWValue((pointerValue + pelocat + optionSize + 24 + 16 + locat), 4);
+			section[i].pointertorawdata = getDWValue((pointerValue + pelocat + optionSize + 24 + 20 + locat), 4);
+		}
+
 		for (int i = 0; i < snumber; i++)
 		{
 			if (RVA >= section[i].virtualAddress && RVA < (getAlignData(section[i].Misc.virtualSize, 0x1000) + section[i].virtualAddress))
@@ -127,6 +123,10 @@ DWORD PeToolsClass::rvaTofoa(BYTE *pointerValue, DWORD RVA)
 				rtf = (RVA - section[i].virtualAddress) + section[i].pointertorawdata;
 			}
 		}
+	}
+	else
+	{
+		rtf = RVA;
 	}
 	return rtf;
 }

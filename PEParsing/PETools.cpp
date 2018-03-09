@@ -6,6 +6,7 @@
 #include "PEExport.h"
 #include "PERelocation.h"
 #include "PEImport.h"
+#include "PEBoundImport.h"
 #include "PETools.h"
 #include "PeToolsClass.h"
 
@@ -120,6 +121,21 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 					pei->creadPEImportDialog(PEInstance, pointer);
 					delete(pei);
 					pei = NULL;
+				}
+
+			}
+			break;
+		}
+		case IDC_PE_BI:
+		{
+			if (PEInstance != NULL)
+			{
+				pebi = new PEBoundImport();
+				if (pebi != NULL)
+				{
+					pebi->creadPEBoundImportDialog(PEInstance, pointer);
+					delete(pebi);
+					pebi = NULL;
 				}
 
 			}
