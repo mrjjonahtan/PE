@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "PEBoundImport.h"
-
+#include "PeToolsClass.h"
+#include <time.h> 
 
 PEBoundImport::PEBoundImport()
 {
@@ -29,50 +30,79 @@ INT_PTR CALLBACK peBoundImportDialog(HWND hDlg, UINT iMessage, WPARAM wParam, LP
 	case WM_INITDIALOG:
 	{
 		pebi->initList(hDlg);
-		/*
-		DWORD boundImportRVA = petc.getDWValue((pei->pointer + directoryLocat + 88), 4);
-		if (boundImportRVA != 0)
+		if (pebi->pointer != NULL)
 		{
-		DWORD boundImportFOA = petc.rvaTofoa(pei->pointer, boundImportRVA);
+			PeToolsClass petc;
+			TCHAR *temporaryBUffer = NULL;
+			temporaryBUffer = (TCHAR*)malloc(sizeof(TCHAR) * 0x100);
+			if (temporaryBUffer == NULL)
+			{
+				return false;
+			}
+			memset(temporaryBUffer, 0, sizeof(TCHAR) * 0x100);
+			DWORD directoryLocat = petc.getDWValue((pebi->pointer + 60), 4) + 24 + 96;
+			DWORD boundImportRVA = petc.getDWValue((pebi->pointer + directoryLocat + 88), 4);
 
-		for (int i = 0; ; i++)
-		{
-		memset(temporaryBUffer, 0, sizeof(TCHAR) * 0x100);
-		DWORD timeDateStamp = petc.getDWValue(pei->pointer + boundImportFOA , 4);
-		WORD offsetModulNmae = petc.getDWValue(pei->pointer + boundImportFOA + 4, 2);
-		WORD numberOfModuleForwarderRefs = petc.getDWValue(pei->pointer + boundImportFOA + 6, 2);
-		if (offsetModulNmae == 0)
-		{
-		break;
-		}
-		DWORD nameRVA = offsetModulNmae + boundImportFOA;
-		DWORD nameFOA = petc.rvaTofoa(pei->pointer, nameRVA);
+			if (boundImportRVA != 0)
+			{
+				DWORD boundImportFOA = petc.rvaTofoa(pebi->pointer, boundImportRVA);
+				HWND boundImportHwnd = GetDlgItem(hDlg, IDC_LIST_BOUND_IMPORT);
+				DWORD fistBoundImportFOA = boundImportFOA;
+				for (int i = 0,j=0; ; i++)
+				{
+					memset(temporaryBUffer, 0, sizeof(TCHAR) * 0x100);
+					DWORD timeDateStamp = petc.getDWValue(pebi->pointer + boundImportFOA, 4);
+					WORD offsetModulNmae = petc.getDWValue(pebi->pointer + boundImportFOA + 4, 2);
+					WORD numberOfModuleForwarderRefs = petc.getDWValue(pebi->pointer + boundImportFOA + 6, 2);
+					if (offsetModulNmae == 0 && timeDateStamp == 0)
+					{
+						break;
+					}
+					DWORD nameRVA = offsetModulNmae + fistBoundImportFOA;
+					DWORD nameFOA = petc.rvaTofoa(pebi->pointer, nameRVA);
 
-		wsprintf(temporaryBUffer, L"%08X", timeDateStamp);
-		petc.getCharPointer(pei->pointer + nameFOA, temporaryBUffer + 9, 0);
+					wsprintf(temporaryBUffer, L"%08X", timeDateStamp);
+					wsprintf(temporaryBUffer + 9, L"%04X", offsetModulNmae);
+					wsprintf(temporaryBUffer + 18, L"%08X", numberOfModuleForwarderRefs);
 
-		pei->insterList(importHwnd, i, temporaryBUffer + 9, L"FFFFFFFF", temporaryBUffer, L"FFFFFFFF");
-		if (numberOfModuleForwarderRefs == 0)
-		{
-		numberOfModuleForwarderRefs = 1;
+					time_t rawtime = timeDateStamp;
+					struct tm timeptr;
+					localtime_s(&timeptr,&rawtime);
+					wcsftime(temporaryBUffer + 27, sizeof(TCHAR) * 0x20, L"%Y-%m-%d %H:%M:%S", &timeptr);
+
+					petc.getCharPointer(pebi->pointer + nameFOA, temporaryBUffer + 60, 0);
+
+					pebi->insterList(boundImportHwnd, i, temporaryBUffer + 60, temporaryBUffer, temporaryBUffer + 27, temporaryBUffer + 9, temporaryBUffer + 18);
+					if (numberOfModuleForwarderRefs == 0)
+					{
+						numberOfModuleForwarderRefs = 1;
+					}
+					*(pebi->boundFOA + j) = boundImportFOA;
+					boundImportFOA = boundImportFOA + (numberOfModuleForwarderRefs * 8);
+					j++;
+				}
+			}
+
+			if (temporaryBUffer != NULL)
+			{
+				free(temporaryBUffer);
+				temporaryBUffer = NULL;
+			}
 		}
-		boundImportFOA = boundImportFOA + (numberOfModuleForwarderRefs * 8);
-		}
-		}
-		*/
+
 		break;
 	}
 	case WM_NOTIFY:
 	{
-		/*NMHDR* pNMHDR = (NMHDR*)lParam;
+		NMHDR* pNMHDR = (NMHDR*)lParam;
 		if (pNMHDR->code == NM_CLICK) {
 			switch (wParam)
 			{
-			case IDC_LIST_PE_IMPORT:
-				pei->enumModules(hDlg, wParam, lParam);
+			case IDC_LIST_BOUND_IMPORT:
+				pebi->enumModules(hDlg, wParam, lParam);
 				break;
 			}
-		}*/
+		}
 		break;
 	}
 	case WM_CLOSE:
@@ -154,10 +184,120 @@ void PEBoundImport::initList(HWND hDlg)
 
 void PEBoundImport::enumModules(HWND hDlg, WPARAM wParam, LPARAM lParam)
 {
+	HWND blockHwnd = GetDlgItem(hDlg, IDC_LIST_BOUND_IMPORT);
+	DWORD dwRowId;
+	TCHAR szPid[0x10];
+	LV_ITEM lv;
 
+	memset(&lv, 0, sizeof(LV_ITEM));
+
+	dwRowId = SendMessage(blockHwnd, LVM_GETNEXTITEM, -1, LVNI_SELECTED);
+	if (dwRowId != -1)
+	{
+		lv.pszText = szPid;
+		lv.cchTextMax = 0x10;
+
+		memset(szPid, 0, sizeof(TCHAR) * 0x10);
+		lv.iSubItem = 4;
+		SendMessage(blockHwnd, LVM_GETITEMTEXT, dwRowId, (DWORD)&lv);
+		int number = 0;
+		swscanf_s(szPid, L"%x", &number);
+
+		if (number != 0)
+		{
+			HWND memberHwnd = GetDlgItem(hDlg, IDC_LIST_BOUND_IMPORT_MEMBERS);
+			disMembers(memberHwnd, number);
+		}
+	}
 }
 
-void PEBoundImport::insterList(HWND blockHwnd, int number, TCHAR *characterOne, TCHAR *characterTWO, TCHAR *characterThree, TCHAR *characterFour)
+void PEBoundImport::disMembers(HWND membersHwnd, DWORD number)
 {
+	if (boundFOA[0] != 0)
+	{
+		PeToolsClass petc;
+		TCHAR *temporaryBUffer = NULL;
+		temporaryBUffer = (TCHAR*)malloc(sizeof(TCHAR) * 0x100);
+		if (temporaryBUffer == NULL)
+		{
+			return;
+		}
+		memset(temporaryBUffer, 0, sizeof(TCHAR) * 0x100);
 
+		DWORD fistBoundImportFOA = boundFOA[0];
+		DWORD boundImportFOA = boundFOA[number];
+		for (int i = 0, j = 0; ; i++)
+		{
+			memset(temporaryBUffer, 0, sizeof(TCHAR) * 0x100);
+			DWORD timeDateStamp = petc.getDWValue(pointer + boundImportFOA, 4);
+			WORD offsetModulNmae = petc.getDWValue(pointer + boundImportFOA + 4, 2);
+			WORD numberOfModuleForwarderRefs = petc.getDWValue(pointer + boundImportFOA + 6, 2);
+			if (offsetModulNmae == 0 && timeDateStamp == 0)
+			{
+				break;
+			}
+			DWORD nameRVA = offsetModulNmae + fistBoundImportFOA;
+			DWORD nameFOA = petc.rvaTofoa(pointer, nameRVA);
+
+			wsprintf(temporaryBUffer, L"%08X", timeDateStamp);
+			wsprintf(temporaryBUffer + 9, L"%04X", offsetModulNmae);
+			wsprintf(temporaryBUffer + 18, L"%08X", numberOfModuleForwarderRefs);
+
+			time_t rawtime = timeDateStamp;
+			struct tm timeptr;
+			localtime_s(&timeptr, &rawtime);
+			wcsftime(temporaryBUffer + 27, sizeof(TCHAR) * 0x20, L"%Y-%m-%d %H:%M:%S", &timeptr);
+
+			petc.getCharPointer(pointer + nameFOA, temporaryBUffer + 60, 0);
+
+			insterList(membersHwnd, i, temporaryBUffer + 60, temporaryBUffer, temporaryBUffer + 27, temporaryBUffer + 9, temporaryBUffer + 18);
+		}
+
+		if (temporaryBUffer != NULL)
+		{
+			free(temporaryBUffer);
+			temporaryBUffer = NULL;
+		}
+
+
+	}
+	
+}
+
+void PEBoundImport::insterList(HWND blockHwnd, int number, TCHAR *characterOne, TCHAR *characterTWO, TCHAR *characterThree, TCHAR *characterFour, TCHAR *characterFive)
+{
+	LV_ITEM vitem;
+	memset(&vitem, 0, sizeof(LV_ITEM));
+	vitem.mask = LVIF_TEXT;
+
+	vitem.pszText = characterOne;
+	vitem.iItem = number;
+	vitem.iSubItem = 0;
+	ListView_InsertItem(blockHwnd, &vitem);
+
+	vitem.pszText = characterTWO;
+	vitem.iItem = number;
+	vitem.iSubItem = 1;
+	ListView_SetItem(blockHwnd, &vitem);
+
+	if (characterThree != NULL) {
+		vitem.pszText = characterThree;
+		vitem.iItem = number;
+		vitem.iSubItem = 2;
+		ListView_SetItem(blockHwnd, &vitem);
+	}
+
+	if (characterFour != NULL) {
+		vitem.pszText = characterFour;
+		vitem.iItem = number;
+		vitem.iSubItem = 3;
+		ListView_SetItem(blockHwnd, &vitem);
+	}
+
+	if (characterFive != NULL) {
+		vitem.pszText = characterFive;
+		vitem.iItem = number;
+		vitem.iSubItem = 4;
+		ListView_SetItem(blockHwnd, &vitem);
+	}
 }
