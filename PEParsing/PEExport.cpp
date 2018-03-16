@@ -52,9 +52,19 @@ INT_PTR CALLBACK peExportDialog(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM 
 			{
 				return false;
 			}
-
 			memset(temporaryBUffer, 0, sizeof(TCHAR) * 0x40);
-			DWORD directoryLocat = petc.getDWValue((pee->pointer + 60), 4) + 24 + 96;
+
+			DWORD platform = petc.getApplicationSize(pee->pointer);
+			DWORD directoryLocat = 0;
+			if (platform == 0x014C)
+			{
+				directoryLocat = petc.getDWValue((pee->pointer + 60), 4) + 24 + 96;
+			}
+			else if (platform == 0x8664)
+			{
+				directoryLocat = petc.getDWValue((pee->pointer + 60), 4) + 24 + 112;
+			}
+
 			DWORD exportRVA = petc.getDWValue((pee->pointer + directoryLocat), 4);
 			if (exportRVA == 0)
 			{

@@ -14,6 +14,6 @@ public:
 	DWORD getAlignData(DWORD data,DWORD alig);
 	DWORD rvaTofoa(BYTE *pointerValue,DWORD RVA);
 	DWORD foaTorva(BYTE *pointerValue, DWORD FOA);
-
+	DWORD getApplicationSize(BYTE *pointerValue);
 };
 

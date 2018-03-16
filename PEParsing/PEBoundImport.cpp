@@ -40,7 +40,16 @@ INT_PTR CALLBACK peBoundImportDialog(HWND hDlg, UINT iMessage, WPARAM wParam, LP
 				return false;
 			}
 			memset(temporaryBUffer, 0, sizeof(TCHAR) * 0x100);
-			DWORD directoryLocat = petc.getDWValue((pebi->pointer + 60), 4) + 24 + 96;
+			DWORD platform = petc.getApplicationSize(pebi->pointer);
+			DWORD directoryLocat = 0;
+			if (platform == 0x014C)
+			{
+				directoryLocat = petc.getDWValue((pebi->pointer + 60), 4) + 24 + 96;
+			}
+			else if (platform == 0x8664)
+			{
+				directoryLocat = petc.getDWValue((pebi->pointer + 60), 4) + 24 + 112;
+			}
 			DWORD boundImportRVA = petc.getDWValue((pebi->pointer + directoryLocat + 88), 4);
 
 			if (boundImportRVA != 0)

@@ -182,3 +182,10 @@ DWORD PeToolsClass::getAlignData(DWORD data, DWORD alig)
 	}
 	return revalue;
 }
+
+DWORD PeToolsClass::getApplicationSize(BYTE *pointerValue)
+{
+	DWORD pelocat = getPELocation(pointerValue);
+	DWORD reValue = getDWValue((pointerValue + pelocat + 4), 2);
+	return reValue;
+}

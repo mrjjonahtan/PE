@@ -55,9 +55,16 @@ INT_PTR CALLBACK PeDirectoryDialog(HWND hDlg, UINT iMessage, WPARAM wParam, LPAR
 			}
 			memset(temporaryBUffer, 0, sizeof(TCHAR) * 0x200);
 
-			DWORD directoryLocat = petc.getDWValue((ped->pointer + 60), 4) + 24 + 96;
-
-
+			DWORD platform = petc.getApplicationSize(ped->pointer);
+			DWORD directoryLocat = 0;
+			if (platform == 0x014C)
+			{
+				directoryLocat = petc.getDWValue((ped->pointer + 60), 4) + 24 + 96;
+			}
+			else if (platform == 0x8664)
+			{
+				directoryLocat = petc.getDWValue((ped->pointer + 60), 4) + 24 + 112;
+			}
 
 			for (int i = 0; i < 32; i++)
 			{

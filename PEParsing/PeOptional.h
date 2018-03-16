@@ -34,6 +34,7 @@ private:
 		IDC_PE_OPTIONAL_LOADERFLAGS,
 		IDC_PE_OPTIONAL_NUMBEROFRVAANDSIZES };
 	HWND editHwnd[30] = { NULL };
+	DWORD platform = 0;
 public:
 	BYTE * pointer = NULL;
 public:
