@@ -54,7 +54,20 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 		}
 		SendMessage(staticDlg, WM_SETTEXT, NULL, (LPARAM)L"请选择文件。");
 
+		/*
+		控件ID：IDC_BUTTON
+		图片：IDB_BITMAP (.bmp图片)
+		控件句柄：hwnd
+		实现：
+		HBITMAP bmp1 = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_BITMAP));
+		按钮要有BS_BITMAP样式
+		SetWindowLong(hwnd, GWL_STYLE, GetWindowLong(hwnd, GWL_STYLE) + BS_BITMAP);
+		SendMessage(hwnd, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmp1);*/
 
+		HWND btn = GetDlgItem(hDlg, IDC_PE_OPEN_BTN);
+		HBITMAP bmp1 = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_SMALL));
+		SetWindowLong(btn, GWL_STYLE, GetWindowLong(btn, GWL_STYLE) + BS_BITMAP);
+		SendMessage(btn, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmp1);
 		break;
 	}
 	case WM_COMMAND:
