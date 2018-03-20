@@ -181,6 +181,8 @@
     <ResourceCompile Include="PEParsing.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="bitmap1.bmp" />
+    <Image Include="openfile.bmp" />
     <Image Include="PEParsing.ico" />
     <Image Include="small.ico" />
   </ItemGroup>

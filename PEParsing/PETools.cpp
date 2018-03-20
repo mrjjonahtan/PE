@@ -9,7 +9,9 @@
 #include "PEBoundImport.h"
 #include "PETools.h"
 #include "PeToolsClass.h"
-
+//文件拖拽
+#include <shellapi.h> 
+#pragma comment(lib, "shell32.lib")  
 
 //打开窗口
 void selectFile(HWND hDlg) {
@@ -53,21 +55,23 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 			staticDlg = GetDlgItem(hDlg, IDC_TEXT_PE);
 		}
 		SendMessage(staticDlg, WM_SETTEXT, NULL, (LPARAM)L"请选择文件。");
-
-		/*
-		控件ID：IDC_BUTTON
-		图片：IDB_BITMAP (.bmp图片)
-		控件句柄：hwnd
-		实现：
-		HBITMAP bmp1 = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_BITMAP));
-		按钮要有BS_BITMAP样式
-		SetWindowLong(hwnd, GWL_STYLE, GetWindowLong(hwnd, GWL_STYLE) + BS_BITMAP);
-		SendMessage(hwnd, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmp1);*/
-
-		HWND btn = GetDlgItem(hDlg, IDC_PE_OPEN_BTN);
-		HBITMAP bmp1 = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_SMALL));
-		SetWindowLong(btn, GWL_STYLE, GetWindowLong(btn, GWL_STYLE) + BS_BITMAP);
-		SendMessage(btn, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmp1);
+		SendDlgItemMessage(hDlg, IDC_PE_OPEN_BTN, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)LoadBitmap(PEInstance, MAKEINTRESOURCE(IDB_BITMAP_OPENFILE)));
+		break;
+	}
+	case WM_DROPFILES:
+	{
+		HDROP hDrop = (HDROP)wParam;
+		UINT  nFileCount = ::DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0);
+		if (nFileCount == 1) {
+			TCHAR strFileName[MAX_PATH] = {0};
+			DragQueryFile(hDrop, 0, strFileName, MAX_PATH);
+			TCHAR *scexe = wcsstr(strFileName, L".exe");
+			TCHAR *scdll = wcsstr(strFileName, L".dll");
+			if (scexe != NULL || scdll != NULL) {
+				PEfun(strFileName);
+			}
+		}
+		DragFinish(hDrop);
 		break;
 	}
 	case WM_COMMAND:
@@ -75,6 +79,11 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 		switch (LOWORD(wParam))
 		{
 		case MENU_PE_OPEN_FILE:
+		{
+			selectFile(hDlg);
+			break;
+		}
+		case IDC_PE_OPEN_BTN:
 		{
 			selectFile(hDlg);
 			break;

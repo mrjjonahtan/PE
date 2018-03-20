@@ -108,5 +108,11 @@
     <Image Include="PEParsing.ico">
       <Filter>资源文件</Filter>
     </Image>
+    <Image Include="bitmap1.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="openfile.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
 </Project>
