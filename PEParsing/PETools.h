@@ -6,6 +6,7 @@
 
 HINSTANCE PEInstance = NULL;
 HWND staticDlg = NULL;
+HWND editDlg = NULL;
 BYTE *pointer = NULL;
 PeFile *pef = NULL;
 PeOptional *peo = NULL;
@@ -15,6 +16,7 @@ PEExport *pee = NULL;
 PERelocation *per = NULL;
 PEImport *pei = NULL;
 PEBoundImport *pebi = NULL;
+PEEditMessage *peem = NULL;
 
 void CreatePEDialog(HINSTANCE thisInstance, HWND hDlg);
 void selectFile(HWND hDlg);

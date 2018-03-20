@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClInclude Include="PEBoundImport.h" />
     <ClInclude Include="PeDirectory.h" />
+    <ClInclude Include="PEEditMessage.h" />
     <ClInclude Include="PEExport.h" />
     <ClInclude Include="PeFile.h" />
     <ClInclude Include="PEImport.h" />
@@ -161,6 +162,7 @@
   <ItemGroup>
     <ClCompile Include="PEBoundImport.cpp" />
     <ClCompile Include="PeDirectory.cpp" />
+    <ClCompile Include="PEEditMessage.cpp" />
     <ClCompile Include="PEExport.cpp" />
     <ClCompile Include="PeFile.cpp" />
     <ClCompile Include="PEImport.cpp" />

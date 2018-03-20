@@ -7,6 +7,7 @@
 #include "PERelocation.h"
 #include "PEImport.h"
 #include "PEBoundImport.h"
+#include "PEEditMessage.h"
 #include "PETools.h"
 #include "PeToolsClass.h"
 //文件拖拽
@@ -53,8 +54,11 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 		if (staticDlg == NULL) {
 			staticDlg = GetDlgItem(hDlg, IDC_TEXT_PE);
 		}
+		if (editDlg == NULL) {
+			editDlg = GetDlgItem(hDlg, IDC_EDIT_MESSAGE);
+		}
 
-		SendMessage(staticDlg, WM_SETTEXT, NULL, (LPARAM)L"请选择文件。");
+		SendMessage(staticDlg, WM_SETTEXT, NULL, (LPARAM)L"==================================\n请选择文件。\n==================================");
 		SendDlgItemMessage(hDlg, IDC_PE_OPEN_BTN, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)LoadBitmap(PEInstance, MAKEINTRESOURCE(IDB_BITMAP_OPENFILE)));
 		break;
 	}
@@ -63,7 +67,7 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 		HDROP hDrop = (HDROP)wParam;
 		UINT  nFileCount = ::DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0);
 		if (nFileCount == 1) {
-			TCHAR strFileName[MAX_PATH] = {0};
+			TCHAR strFileName[MAX_PATH] = { 0 };
 			DragQueryFile(hDrop, 0, strFileName, MAX_PATH);
 			TCHAR *scexe = wcsstr(strFileName, L".exe");
 			TCHAR *scdll = wcsstr(strFileName, L".dll");
@@ -215,12 +219,22 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 		}
 		case IDC_PE_FILE_MESSAGE:
 		{
-
+			ShowWindow(editDlg, SW_HIDE);
+			ShowWindow(staticDlg, SW_RESTORE);
 			break;
 		}
 		case IDC_PE_STRUCT:
 		{
-
+			ShowWindow(editDlg, SW_RESTORE);
+			ShowWindow(staticDlg, SW_HIDE);
+			if (pointer != NULL) {
+				peem = new PEEditMessage();
+				if (peem != NULL) {
+					peem->setMessageText(hDlg, pointer);
+					delete(peem);
+					peem = NULL;
+				}
+			}
 			break;
 		}
 
@@ -234,6 +248,8 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 			free(pointer);
 			pointer = NULL;
 		}
+		editDlg = NULL;
+		staticDlg = NULL;
 		EndDialog(hDlg, 0);
 		break;
 	}
@@ -275,7 +291,8 @@ void PEfun(TCHAR *path) {
 	TCHAR *filesize = TEXT("文件大小：\0");
 	TCHAR *filehead = TEXT("文件头标记：\0");
 	TCHAR *enter = TEXT("\n\0");
-	TCHAR showMessage[0x400] = TEXT("文件路径：\0");
+	TCHAR showMessage[0x400] = TEXT("==================================\n文件路径：\0");
+	TCHAR *splitLine = TEXT("\n==================================");
 
 	wcsncat_s(showMessage, path, wcslen(path));
 	wcsncat_s(showMessage, enter, wcslen(enter));
@@ -287,6 +304,7 @@ void PEfun(TCHAR *path) {
 	wcsncat_s(showMessage, filehead, wcslen(filehead));
 	TCHAR head[3] = { TCHAR(*pointer),TCHAR(*(pointer + 1)),0 };
 	wcsncat_s(showMessage, head, wcslen(head));
+	wcsncat_s(showMessage, splitLine, wcslen(splitLine));
 	SendMessage(staticDlg, WM_SETTEXT, NULL, (WPARAM)showMessage);
 }
 
@@ -397,31 +415,7 @@ INT_PTR CALLBACK DlgProcPEDOS(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lP
 	}
 	return false;
 }
-/*
-void getValue(BYTE *pointerValue, int number, TCHAR *tvlue) {
-	char *vaby = NULL;
-	vaby = (char*)malloc(0x200);
-	if (vaby == NULL)
-	{
-		return;
-	}
-	for (int i = number - 1, j = 0; i >= 0; i--, j++)
-	{
-		memset(vaby, 0, 0x200);
-		DWORD valueTem = *(pointerValue + i);
-		sprintf_s(vaby, 0x200, "%X", valueTem);
-		for (int k = 0; *(vaby + k) != 0; k++)
-		{
-			*(tvlue + j) = *(vaby + k);
-			j++;
-		}
-		j--;
-	}
-	if (vaby != NULL) {
-		free(vaby);
-	}
-}
-*/
+
 /*释放指针数组*/
 void freeSpace(TCHAR *point[]) {
 	for (int i = 0; i < DOS_POINT; i++) {

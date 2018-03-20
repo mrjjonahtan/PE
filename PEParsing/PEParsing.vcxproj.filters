@@ -57,6 +57,9 @@
     <ClInclude Include="PEBoundImport.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="PEEditMessage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -93,6 +96,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="PEBoundImport.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PEEditMessage.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
