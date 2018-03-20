@@ -50,10 +50,10 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 	{
 	case WM_INITDIALOG:
 	{
-
 		if (staticDlg == NULL) {
 			staticDlg = GetDlgItem(hDlg, IDC_TEXT_PE);
 		}
+
 		SendMessage(staticDlg, WM_SETTEXT, NULL, (LPARAM)L"ÇëÑ¡ÔñÎÄ¼þ¡£");
 		SendDlgItemMessage(hDlg, IDC_PE_OPEN_BTN, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)LoadBitmap(PEInstance, MAKEINTRESOURCE(IDB_BITMAP_OPENFILE)));
 		break;
