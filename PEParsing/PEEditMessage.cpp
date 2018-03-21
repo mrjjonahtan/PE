@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "PEEditMessage.h"
+#include "PeToolsClass.h"
 
 
 PEEditMessage::PEEditMessage()
