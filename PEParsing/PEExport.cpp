@@ -79,7 +79,7 @@ INT_PTR CALLBACK peExportDialog(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM 
 			SetWindowText(pee->editHwnd[0], temporaryBUffer);
 			petc.getValue((pee->pointer + exportFOA), 4, temporaryBUffer + 9);
 			petc.getValue((pee->pointer + exportFOA + 12), 4, temporaryBUffer + 18);//name
-			//DWORD nameRVA = petc.getDWValue((pee->pointer + exportFOA + 12), 4);
+			DWORD nameRVA = petc.getDWValue((pee->pointer + exportFOA + 12), 4);
 			DWORD nameFOA = petc.rvaTofoa(pee->pointer, petc.getDWValue((pee->pointer + exportFOA + 12), 4));
 			petc.getValue((pee->pointer + exportFOA + 16), 4, temporaryBUffer + 27);//base
 			petc.getCharPointer((pee->pointer + nameFOA), temporaryBUffer + 36, 0);//name string

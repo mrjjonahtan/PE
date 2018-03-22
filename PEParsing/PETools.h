@@ -20,8 +20,8 @@ PEEditMessage *peem = NULL;
 
 void CreatePEDialog(HINSTANCE thisInstance, HWND hDlg);
 void selectFile(HWND hDlg);
-void PEfun(TCHAR *path);
-void freeSpace(TCHAR *point[]);
+void PEfun(wchar_t *path);
+void freeSpace(wchar_t *point[]);
 char* ConvertLPWSTRToLPSTR(LPWSTR lpwszStrIn);
 
 INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lParam);

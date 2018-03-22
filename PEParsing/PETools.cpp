@@ -67,10 +67,10 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 		HDROP hDrop = (HDROP)wParam;
 		UINT  nFileCount = ::DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0);
 		if (nFileCount == 1) {
-			TCHAR strFileName[MAX_PATH] = { 0 };
+			wchar_t strFileName[MAX_PATH] = { 0 };
 			DragQueryFile(hDrop, 0, strFileName, MAX_PATH);
-			TCHAR *scexe = wcsstr(strFileName, L".exe");
-			TCHAR *scdll = wcsstr(strFileName, L".dll");
+			wchar_t *scexe = wcsstr(strFileName, L".exe");
+			wchar_t *scdll = wcsstr(strFileName, L".dll");
 			if (scexe != NULL || scdll != NULL) {
 				PEfun(strFileName);
 			}
@@ -259,7 +259,7 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 	return false;
 }
 /*pe*/
-void PEfun(TCHAR *path) {
+void PEfun(wchar_t *path) {
 	FILE *filePointer = NULL;
 	DWORD size = 0;
 
@@ -286,26 +286,54 @@ void PEfun(TCHAR *path) {
 	/*关闭filepoint*/
 	fclose(filePointer);
 	filePointer = NULL;
+	PeToolsClass petc;
 
-	/*操作指针*/
-	TCHAR *filesize = TEXT("文件大小：\0");
-	TCHAR *filehead = TEXT("文件头标记：\0");
-	TCHAR *enter = TEXT("\n\0");
-	TCHAR showMessage[0x400] = TEXT("==================================\n文件路径：\0");
-	TCHAR *splitLine = TEXT("\n==================================");
-
-	wcsncat_s(showMessage, path, wcslen(path));
-	wcsncat_s(showMessage, enter, wcslen(enter));
-	wcsncat_s(showMessage, filesize, wcslen(filesize));
-	TCHAR sd[10] = { 0 };
-	_itow_s(size, sd, 10, 10);
-	wcsncat_s(showMessage, sd, wcslen(sd));
-	wcsncat_s(showMessage, enter, wcslen(enter));
-	wcsncat_s(showMessage, filehead, wcslen(filehead));
-	TCHAR head[3] = { TCHAR(*pointer),TCHAR(*(pointer + 1)),0 };
-	wcsncat_s(showMessage, head, wcslen(head));
-	wcsncat_s(showMessage, splitLine, wcslen(splitLine));
-	SendMessage(staticDlg, WM_SETTEXT, NULL, (WPARAM)showMessage);
+	if (petc.getDWValue(pointer, 2) == 0x5a4d) {
+		/*操作指针*/
+		wchar_t *filesize = TEXT("文件大小	：");
+		wchar_t *filehead = TEXT("文件头标记	：");
+		wchar_t *platform = _TEXT("运行平台	：");
+		wchar_t *enter = TEXT("\n\0");
+		wchar_t showMessage[0x400] = TEXT("============================================\n文件路径	：");
+		wchar_t *splitLine = TEXT("\n============================================");
+		wchar_t *ispe = L"是否是PE文件	：是";
+		wcsncat_s(showMessage, path, wcslen(path));
+		wcsncat_s(showMessage, enter, wcslen(enter));
+		wcsncat_s(showMessage, ispe, wcslen(ispe));
+		wcsncat_s(showMessage, enter, wcslen(enter));
+		wcsncat_s(showMessage, filesize, wcslen(filesize));
+		wchar_t sd[10] = { 0 };
+		_itow_s(size, sd, 10, 10);
+		wcsncat_s(showMessage, sd, wcslen(sd));
+		wcsncat_s(showMessage, enter, wcslen(enter));
+		wcsncat_s(showMessage, filehead, wcslen(filehead));
+		wchar_t head[3] = { wchar_t(*pointer),wchar_t(*(pointer + 1)),0 };
+		wcsncat_s(showMessage, head, wcslen(head));
+		wcsncat_s(showMessage, enter, wcslen(enter));
+		wcsncat_s(showMessage, platform, wcslen(platform));
+		DWORD platformValue = petc.getApplicationSize(pointer);
+		if (platformValue == 0x014C)
+		{
+			wchar_t *wint = L"Win32位";
+			wcsncat_s(showMessage, wint, wcslen(wint));
+		}
+		else if (platformValue == 0x8664)
+		{
+			wchar_t *wint = L"Win64位";
+			wcsncat_s(showMessage, wint, wcslen(wint));
+		}
+		wcsncat_s(showMessage, splitLine, wcslen(splitLine));
+		SendMessage(staticDlg, WM_SETTEXT, NULL, (WPARAM)showMessage);
+	}
+	else
+	{
+		wchar_t *message = L"============================================\n非PE文件，如出现BUG欢迎提交到邮箱：1640408540@qq.com\n============================================";
+		SendMessage(staticDlg, WM_SETTEXT, NULL, (WPARAM)message);
+		if (pointer != NULL) {
+			free(pointer);
+			pointer = NULL;
+		}
+	}
 }
 
 /*TCHAR to char*/
@@ -333,7 +361,7 @@ char* ConvertLPWSTRToLPSTR(LPWSTR lpwszStrIn)
 INT_PTR CALLBACK DlgProcPEDOS(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 	int editID[20] = { IDC_EDIT_PE_MAGIC ,IDC_EDIT_PE_CBLP, IDC_EDIT_PE_CP ,IDC_EDIT_PE_CRLC ,IDC_EDIT_PE_CPARHDR,IDC_EDIT_PE_MINALLOC,IDC_EDIT_PE_MAXALLOC,IDC_EDIT_PE_SS,IDC_EDIT_PE_SP,IDC_EDIT_PE_CSUM,IDC_EDIT_PE_IP,IDC_EDIT_PE_CS,IDC_EDIT_PE_LFARLC,IDC_EDIT_PE_OVNO,IDC_EDIT_PE_RES,IDC_EDIT_PE_OEMID,IDC_EDIT_PE_OEMINFO,IDC_EDIT_PE_RES2,IDC_EDIT_PE_LFANEW,0 };
 	HWND editHwnd[20] = { 0 };
-	TCHAR *DOSPoint = NULL;
+	wchar_t *DOSPoint = NULL;
 	switch (iMessage)
 	{
 	case WM_INITDIALOG:
@@ -345,12 +373,12 @@ INT_PTR CALLBACK DlgProcPEDOS(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lP
 				editHwnd[i] = GetDlgItem(hDlg, editID[i]);
 			}
 
-			DOSPoint = (TCHAR*)malloc(sizeof(TCHAR)*DOS_POINT);
+			DOSPoint = (wchar_t*)malloc(sizeof(wchar_t)*DOS_POINT);
 			if (DOSPoint == NULL)
 			{
 				return false;
 			}
-			memset(DOSPoint, 0, sizeof(TCHAR)*DOS_POINT);
+			memset(DOSPoint, 0, sizeof(wchar_t)*DOS_POINT);
 			for (int i = 0; i < 14; i++)
 			{
 				if (i == 0)
@@ -417,7 +445,7 @@ INT_PTR CALLBACK DlgProcPEDOS(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM lP
 }
 
 /*释放指针数组*/
-void freeSpace(TCHAR *point[]) {
+void freeSpace(wchar_t *point[]) {
 	for (int i = 0; i < DOS_POINT; i++) {
 		if (point[i] != NULL) {
 			free(point[i]);
