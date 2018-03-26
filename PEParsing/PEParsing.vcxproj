@@ -146,6 +146,7 @@
     <ClInclude Include="PEBoundImport.h" />
     <ClInclude Include="PeDirectory.h" />
     <ClInclude Include="PEEditMessage.h" />
+    <ClInclude Include="PEEncryptedshell.h" />
     <ClInclude Include="PEExport.h" />
     <ClInclude Include="PeFile.h" />
     <ClInclude Include="PEImport.h" />
@@ -163,6 +164,7 @@
     <ClCompile Include="PEBoundImport.cpp" />
     <ClCompile Include="PeDirectory.cpp" />
     <ClCompile Include="PEEditMessage.cpp" />
+    <ClCompile Include="PEEncryptedshell.cpp" />
     <ClCompile Include="PEExport.cpp" />
     <ClCompile Include="PeFile.cpp" />
     <ClCompile Include="PEImport.cpp" />
