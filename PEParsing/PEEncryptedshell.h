@@ -11,7 +11,7 @@ public:
 private :
 	void encryptionAlgorithm();
 	void decryptionAlgorithm();
-	void addData();
+	void addData(HWND hDlg);
 public:
 	void createDialog(HINSTANCE PeInstance);
 	void selectFile(HWND hDlg ,BYTE style);

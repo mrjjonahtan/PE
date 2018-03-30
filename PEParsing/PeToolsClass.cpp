@@ -189,3 +189,28 @@ DWORD PeToolsClass::getApplicationSize(BYTE *pointerValue)
 	DWORD reValue = getDWValue((pointerValue + pelocat + 4), 2);
 	return reValue;
 }
+
+void PeToolsClass::putData(BYTE *pointer, DWORD value, DWORD number)
+{
+	switch (number)
+	{
+	case 1:
+		*pointer = (value << 24) >> 24;
+		break;
+	case 2:
+		*pointer = (value << 24) >> 24;
+		*(pointer + 1) = (value << 16) >> 24;
+		break;
+	case 3:
+		*pointer = (value << 24) >> 24;
+		*(pointer + 1) = (value << 16) >> 24;
+		*(pointer + 2) = (value << 8) >> 24;
+		break;
+	case 4:
+		*pointer = (value << 24) >> 24;
+		*(pointer + 1) = (value << 16) >> 24;
+		*(pointer + 2) = (value << 8) >> 24;
+		*(pointer + 3) = value >> 24;
+		break;
+	}
+}

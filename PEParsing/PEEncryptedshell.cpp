@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "PEEncryptedshell.h"
+#include "PeToolsClass.h"
+#include "fileMallocPointer.h"
 
 
 PEEncryptedshell::PEEncryptedshell()
@@ -10,6 +12,7 @@ PEEncryptedshell::PEEncryptedshell()
 
 PEEncryptedshell::~PEEncryptedshell()
 {
+
 }
 
 void PEEncryptedshell::createDialog(HINSTANCE PeInstance)
@@ -35,15 +38,15 @@ INT_PTR CALLBACK encryptedShellDialog(HWND hDlg, UINT iMessage, WPARAM wParam, L
 		{
 		case IDC_BUTTON_SENCED:
 		{
-			peencryptedshell->selectFile(hDlg,1);
-			break; 
+			peencryptedshell->selectFile(hDlg, 1);
+			break;
 		}
 		case IDC_BUTTON_SENCED_SHELL:
 			peencryptedshell->selectFile(hDlg, 2);
 			break;
 		case IDC_BUTTON_ENCRYPTION:
 		{
-
+			peencryptedshell->addData(hDlg);
 			break;
 		}
 		}
@@ -91,7 +94,7 @@ void PEEncryptedshell::selectFile(HWND hDlg, BYTE style) {
 				HWND btn = GetDlgItem(hDlg, IDC_EDIT_SHELL_FILE_PATH);
 				SendMessage(btn, WM_SETTEXT, NULL, (LPARAM)strFilename);
 			}
-			
+
 		}
 	}
 }
@@ -109,7 +112,115 @@ void PEEncryptedshell::decryptionAlgorithm()
 }
 
 //Ìí¼Ó
-void PEEncryptedshell::addData()
+void PEEncryptedshell::addData(HWND hDlg)
 {
+	PeToolsClass petc;
+	fileMallocPointer fmp;
 
+	BYTE *shellPointer = NULL;
+	BYTE *exePointer = NULL;
+
+	DWORD exeSize = 0;
+	DWORD shellSize = 0;
+	DWORD lfanew = 0;
+	DWORD sizeOfImage = 0;
+	DWORD numberOfSections = 0;
+	DWORD sizeOfOptionalHeader = 0;
+
+	wchar_t w_filePath[0x150] = { 0 };
+	wchar_t w_shellFielPath[0x150] = { 0 };
+	char c_filePath[0x150] = { 0 };
+	char c_shellFielPath[0x150] = { 0 };
+	char m_sections[50] = { 0 };
+
+	struct mSection {
+		union
+		{
+			DWORD PhysicalAddress;
+			DWORD virtualSize;
+		} Misc;
+		DWORD virtualAddress;
+		DWORD sizeOfRawData;
+		DWORD pointertorawdata;
+	};
+	mSection section[10] = { 0 };
+
+	HWND filePath = GetDlgItem(hDlg, IDC_EDIT_FILE_PATH);
+	HWND shellFielPath = GetDlgItem(hDlg, IDC_EDIT_SHELL_FILE_PATH);
+
+	SendMessage(filePath, WM_GETTEXT, 0x150, (LPARAM)w_filePath);
+	SendMessage(shellFielPath, WM_GETTEXT, 0x150, (LPARAM)w_shellFielPath);
+
+	if (wcslen(w_filePath) <= 0 && wcslen(w_shellFielPath) <= 0) {
+		return;
+	}
+
+	sprintf_s(c_filePath, "%ws", w_filePath);
+	sprintf_s(c_shellFielPath, "%ws", w_shellFielPath);
+
+	//exe
+	exeSize = fmp.filemalloc(c_filePath, &exePointer, 0);
+
+	//shell
+	shellSize = fmp.filemalloc(c_shellFielPath, &shellPointer, exeSize + 0x100);
+
+	lfanew = petc.getPELocation(shellPointer);
+	numberOfSections = petc.getSectionNumber(shellPointer);
+	sizeOfOptionalHeader = petc.getOptionSizeValue(shellPointer);
+	sizeOfImage = petc.getDWValue((shellPointer + lfanew + 24 + 56), 4);
+
+	for (int i = 0; i < numberOfSections; i++)
+	{
+		DWORD locat = i * 40;
+		section[i].Misc.virtualSize = petc.getDWValue((shellPointer + lfanew + sizeOfOptionalHeader + 24 + 8 + locat), 4);
+		section[i].virtualAddress = petc.getDWValue((shellPointer + lfanew + sizeOfOptionalHeader + 24 + 12 + locat), 4);
+		section[i].sizeOfRawData = petc.getDWValue((shellPointer + lfanew + sizeOfOptionalHeader + 24 + 16 + locat), 4);
+		section[i].pointertorawdata = petc.getDWValue((shellPointer + lfanew + sizeOfOptionalHeader + 24 + 20 + locat), 4);
+	}
+
+	memcpy_s(m_sections, 50, (shellPointer + lfanew + sizeOfOptionalHeader + 24), 40);
+
+	memcpy_s((shellPointer + 24 + numberOfSections * 40), 50, m_sections, 40);
+
+	memcpy((shellPointer + (section[numberOfSections - 1].pointertorawdata + section[numberOfSections - 1].sizeOfRawData)), exePointer, exeSize);
+
+	//¸ü¸Ä
+	petc.putData((shellPointer + lfanew + 4 + 2), numberOfSections + 1, 2);
+	petc.putData((shellPointer + lfanew + 24 + 56), sizeOfImage + exeSize + 0x100, 4);
+
+	petc.putData((shellPointer + lfanew + sizeOfOptionalHeader + 24 + numberOfSections * 40 ), 0x7461642e, 4);
+	petc.putData((shellPointer + lfanew + sizeOfOptionalHeader + 24 + numberOfSections  * 40 + 8), exeSize, 4);
+	petc.putData((shellPointer + lfanew + sizeOfOptionalHeader + 24 + numberOfSections * 40 + 12), (section[numberOfSections - 1].virtualAddress + petc.getAlignData(section[numberOfSections - 1].virtualAddress, 0x1000)), 4);
+	petc.putData((shellPointer + lfanew + sizeOfOptionalHeader + 24 + numberOfSections * 40 + 16), (petc.getAlignData(exeSize, 0x200)), 4);
+	petc.putData((shellPointer + lfanew + sizeOfOptionalHeader + 24 + numberOfSections * 40 + 20), (section[numberOfSections - 1].pointertorawdata+ section[numberOfSections - 1].sizeOfRawData), 4);
+
+	if (exePointer != NULL) {
+		free(exePointer);
+		exePointer = NULL;
+	}
+
+	DWORD s = sizeof(shellPointer);
+
+	FILE *fp = NULL;
+	fopen_s(&fp, "D://shell.exe", "wb");
+
+	if (fp == NULL)
+	{
+		return;
+	}
+
+	if (fwrite(shellPointer, shellSize, 1, fp) != 1)
+	{
+		fclose(fp);
+		return;
+	}
+
+	fclose(fp);
+
+	if (shellPointer != NULL) {
+		free(shellPointer);
+		shellPointer = NULL;
+	}
+	MessageBox(0, 0, 0, 0);
 }
+
