@@ -182,17 +182,19 @@ void PEEncryptedshell::addData(HWND hDlg)
 
 	memcpy_s((shellPointer + 24 + numberOfSections * 40), 50, m_sections, 40);
 
-	memcpy((shellPointer + (section[numberOfSections - 1].pointertorawdata + section[numberOfSections - 1].sizeOfRawData)), exePointer, exeSize);
+	//memcpy((shellPointer + (section[numberOfSections - 1].pointertorawdata + section[numberOfSections - 1].sizeOfRawData)), exePointer, exeSize);
 
 	//更改
 	petc.putData((shellPointer + lfanew + 4 + 2), numberOfSections + 1, 2);
 	petc.putData((shellPointer + lfanew + 24 + 56), sizeOfImage + exeSize + 0x100, 4);
 
-	petc.putData((shellPointer + lfanew + sizeOfOptionalHeader + 24 + numberOfSections * 40 ), 0x7461642e, 4);
+	petc.putData((shellPointer + lfanew + sizeOfOptionalHeader + 24 + numberOfSections * 40 ), 0x6A726D2E, 4);
 	petc.putData((shellPointer + lfanew + sizeOfOptionalHeader + 24 + numberOfSections  * 40 + 8), exeSize, 4);
 	petc.putData((shellPointer + lfanew + sizeOfOptionalHeader + 24 + numberOfSections * 40 + 12), (section[numberOfSections - 1].virtualAddress + petc.getAlignData(section[numberOfSections - 1].virtualAddress, 0x1000)), 4);
 	petc.putData((shellPointer + lfanew + sizeOfOptionalHeader + 24 + numberOfSections * 40 + 16), (petc.getAlignData(exeSize, 0x200)), 4);
 	petc.putData((shellPointer + lfanew + sizeOfOptionalHeader + 24 + numberOfSections * 40 + 20), (section[numberOfSections - 1].pointertorawdata+ section[numberOfSections - 1].sizeOfRawData), 4);
+	petc.putData((shellPointer + lfanew + sizeOfOptionalHeader + 24 + numberOfSections * 40 + 36), 0xE00000E0, 4);
+
 
 	if (exePointer != NULL) {
 		free(exePointer);
@@ -202,7 +204,7 @@ void PEEncryptedshell::addData(HWND hDlg)
 	DWORD s = sizeof(shellPointer);
 
 	FILE *fp = NULL;
-	fopen_s(&fp, "D://shell.exe", "wb");
+	fopen_s(&fp, "C://Users//jonathan//Desktop//calc//shell.exe", "wb");
 
 	if (fp == NULL)
 	{
@@ -221,6 +223,6 @@ void PEEncryptedshell::addData(HWND hDlg)
 		free(shellPointer);
 		shellPointer = NULL;
 	}
-	MessageBox(0, 0, 0, 0);
+	MessageBox(NULL, L"shell程序已生成。\n路径：C://Users//jonathan//Desktop//calc//shell.exe", L"提示", MB_OK);
 }
 
