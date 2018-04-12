@@ -196,10 +196,21 @@ void PEEncryptedshell::addData(HWND hDlg)
 		exePointer = NULL;
 	}
 
-	DWORD s = sizeof(shellPointer);
+	//获得当前目录
+	wchar_t w_patch[MAX_PATH] = { 0 };
+	char patch[MAX_PATH] = { 0 };
 
+	GetModuleFileName(NULL, w_patch, MAX_PATH);
+	(_tcsrchr(w_patch, _T('\\')))[1] = 0;
+
+	sprintf_s(patch, "%wsshell.exe", w_patch);
+
+	//
 	FILE *fp = NULL;
-	fopen_s(&fp, "C://Users//jonathan//Desktop//calc//shell.exe", "wb");
+	int ercod = fopen_s(&fp, patch, "wb");
+	if (ercod != 0x00) {
+		MessageBox(NULL, L"文件创建失败\n当前路径可能被安全工具限制", L"提示", MB_OK);
+	}
 
 	if (fp == NULL)
 	{
@@ -218,6 +229,6 @@ void PEEncryptedshell::addData(HWND hDlg)
 		free(shellPointer);
 		shellPointer = NULL;
 	}
-	MessageBox(NULL, L"shell程序已生成。\n路径：C://Users//jonathan//Desktop//calc//shell.exe", L"提示", MB_OK);
+	MessageBox(NULL, L"Shell程序已生成\n在当前目录。", L"提示", MB_OK);
 }
 
