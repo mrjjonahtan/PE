@@ -90,6 +90,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -145,6 +146,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="fileMallocPointer.h" />
+    <ClInclude Include="InjectionAndUnloading.h" />
     <ClInclude Include="PEBoundImport.h" />
     <ClInclude Include="PeDirectory.h" />
     <ClInclude Include="PEEditMessage.h" />
@@ -164,6 +166,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="fileMallocPointer.cpp" />
+    <ClCompile Include="InjectionAndUnloading.cpp" />
     <ClCompile Include="PEBoundImport.cpp" />
     <ClCompile Include="PeDirectory.cpp" />
     <ClCompile Include="PEEditMessage.cpp" />
