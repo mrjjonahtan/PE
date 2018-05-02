@@ -4,6 +4,8 @@
 
 InjectionAndUnloading::InjectionAndUnloading()
 {
+	peInstance = NULL;
+	hDllMod = NULL;
 }
 
 
@@ -43,59 +45,12 @@ INT_PTR CALLBACK injectionDialog(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM
 		break;
 		case IDC_BUTTON_DLL_INJECTION:
 		{
-			wchar_t wPid[0x10] = { 0 };
-			wchar_t wPath[0x60] = { 0 };
-			HWND pathEdit = ::GetDlgItem(hDlg, IDC_EDIT_DELL_PATH);
-			HWND pidEdit = ::GetDlgItem(hDlg, IDC_EDIT_PID);
-
-			::SendMessage(pathEdit, WM_GETTEXT, 0x60, (LPARAM)wPath);
-			::SendMessage(pidEdit, WM_GETTEXT, 0x10, (LPARAM)wPid);
-
-			if (!wcslen(wPid) || !wcslen(wPath))
-			{
-				break;
-			}
-
-			//
-			HWND hRemoteThread = ::GetDlgItem(hDlg, IDC_CHECK_REMOTE_THREAD);
-			HWND hMemoryWrite = ::GetDlgItem(hDlg, IDC_CHECK_MEMORY_WRITE);
-			HWND hProcessLoading = ::GetDlgItem(hDlg, IDC_CHECK_PROCESS_LOADING);
-			HWND hInput = ::GetDlgItem(hDlg, IDC_CHECK_INPUT);
-
-			int rtStatus = ::SendMessage(hRemoteThread, BM_GETCHECK, NULL, NULL);
-			int mwStatus = ::SendMessage(hMemoryWrite, BM_GETCHECK, NULL, NULL);
-			int plStatus = ::SendMessage(hProcessLoading, BM_GETCHECK, NULL, NULL);
-			int iStatus = ::SendMessage(hInput, BM_GETCHECK, NULL, NULL);
-
-			if (rtStatus)
-			{
-				DWORD dPid = 0;
-				swscanf_s(wPid, L"%d", &dPid);
-				if (dPid)
-				{
-					if (injectunloading->remoteThreadInjection(dPid, wPath))
-					{
-						MessageBox(NULL,  L"注入成功", L"Message", MB_OK);
-					}
-				}
-				
-			}
-
-			if (mwStatus)
-			{
-
-			}
-
-			if (plStatus)
-			{
-
-			}
-
-			if (iStatus)
-			{
-
-			}
-
+			injectunloading->operating(hDlg, 1);
+		}
+		break;
+		case IDC_BUTTON_UNINSTALL:
+		{
+			injectunloading->operating(hDlg, 2);
 		}
 		break;
 		}
@@ -146,7 +101,6 @@ int InjectionAndUnloading::remoteThreadInjection(DWORD pid, wchar_t *path)
 {
 	PVOID  address = 0;
 	HANDLE hProcess = ::OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
-
 	if (hProcess == NULL)
 	{
 		return 0;
@@ -171,7 +125,6 @@ int InjectionAndUnloading::remoteThreadInjection(DWORD pid, wchar_t *path)
 
 	//
 	HANDLE hRemoteThread = ::CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)LoadLibrary, address, NULL, NULL);
-
 	if (NULL == hRemoteThread)
 	{
 		return 0;
@@ -179,8 +132,12 @@ int InjectionAndUnloading::remoteThreadInjection(DWORD pid, wchar_t *path)
 
 	::WaitForSingleObject(hRemoteThread, INFINITE);
 
-	//DWORD lpExitCode = -1;
-	//::GetExitCodeThread(hRemoteThread, &lpExitCode);//退出码为LoadLibrary返回的写入的函数的地址
+	DWORD lpExitCode = -1;
+	::GetExitCodeThread(hRemoteThread, &lpExitCode);//退出码为LoadLibrary返回的写入的函数的地址
+	if (lpExitCode != -1) 
+	{
+		hDllMod = (HMODULE)lpExitCode;
+	}
 
 	VirtualFreeEx(hProcess, address, 0x60, MEM_DECOMMIT);
 
@@ -188,4 +145,105 @@ int InjectionAndUnloading::remoteThreadInjection(DWORD pid, wchar_t *path)
 	hRemoteThread = NULL;
 
 	return 1;
+}
+
+int InjectionAndUnloading::remoteThreadUninstall(DWORD pid, wchar_t *path)
+{
+	if (hDllMod == NULL)
+	{
+		return 0;
+	}
+
+	//
+	HANDLE hProcess = ::OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
+	if (hProcess == NULL)
+	{
+		return 0;
+	}
+
+	//
+	HANDLE hRemoteThread = ::CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)FreeLibrary, hDllMod, NULL, NULL);
+	if (NULL == hRemoteThread)
+	{
+		return 0;
+	}
+
+	::WaitForSingleObject(hRemoteThread, INFINITE);
+
+	DWORD lpExitCode = -1;
+	::GetExitCodeThread(hRemoteThread, &lpExitCode);
+
+	::CloseHandle(hRemoteThread);
+	hRemoteThread = NULL;
+
+	hDllMod = NULL;
+
+	return 1;
+}
+
+void InjectionAndUnloading::operating(HWND hDlg, int status)
+{
+	wchar_t wPid[0x10] = { 0 };
+	wchar_t wPath[0x60] = { 0 };
+	HWND pathEdit = ::GetDlgItem(hDlg, IDC_EDIT_DELL_PATH);
+	HWND pidEdit = ::GetDlgItem(hDlg, IDC_EDIT_PID);
+
+	::SendMessage(pathEdit, WM_GETTEXT, 0x60, (LPARAM)wPath);
+	::SendMessage(pidEdit, WM_GETTEXT, 0x10, (LPARAM)wPid);
+
+	if (!wcslen(wPid) || !wcslen(wPath))
+	{
+		return;
+	}
+
+	//
+	HWND hRemoteThread = ::GetDlgItem(hDlg, IDC_CHECK_REMOTE_THREAD);
+	HWND hMemoryWrite = ::GetDlgItem(hDlg, IDC_CHECK_MEMORY_WRITE);
+	HWND hProcessLoading = ::GetDlgItem(hDlg, IDC_CHECK_PROCESS_LOADING);
+	HWND hInput = ::GetDlgItem(hDlg, IDC_CHECK_INPUT);
+
+	int rtStatus = ::SendMessage(hRemoteThread, BM_GETCHECK, NULL, NULL);
+	int mwStatus = ::SendMessage(hMemoryWrite, BM_GETCHECK, NULL, NULL);
+	int plStatus = ::SendMessage(hProcessLoading, BM_GETCHECK, NULL, NULL);
+	int iStatus  = ::SendMessage(hInput, BM_GETCHECK, NULL, NULL);
+
+	if (rtStatus)
+	{
+		DWORD dPid = 0;
+		swscanf_s(wPid, L"%d", &dPid);
+		if (dPid)
+		{
+			if (status == 1)
+			{
+				if (remoteThreadInjection(dPid, wPath))
+				{
+					MessageBox(NULL, L"注入成功", L"Message", MB_OK);
+				}
+			}
+			else if(status == 2)
+			{
+				if (remoteThreadUninstall(dPid, wPath))
+				{
+					MessageBox(NULL, L"卸载成功", L"Message", MB_OK);
+				}
+			}
+			
+		}
+
+	}
+
+	if (mwStatus)
+	{
+
+	}
+
+	if (plStatus)
+	{
+
+	}
+
+	if (iStatus)
+	{
+
+	}
 }

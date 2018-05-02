@@ -2,13 +2,16 @@
 class InjectionAndUnloading
 {
 private:
-	HINSTANCE peInstance = NULL;
+	HINSTANCE peInstance;
+	HMODULE hDllMod;
 public:
 	InjectionAndUnloading();
 	~InjectionAndUnloading();
 private:
 	void selectFile(HWND hDlg);
-	int remoteThreadInjection(DWORD pid, wchar_t *path);
+	int  remoteThreadInjection(DWORD pid, wchar_t *path);
+	int remoteThreadUninstall(DWORD pid, wchar_t *path);
+	void operating(HWND hDlg,int status);
 public:
 	void createDialog(HINSTANCE PeInstance);
 
