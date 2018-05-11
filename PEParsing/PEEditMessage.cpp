@@ -5,44 +5,39 @@
 
 PEEditMessage::PEEditMessage()
 {
-	message = (wchar_t*)malloc(sizeof(wchar_t) * 0x7530);
-	temChar = (wchar_t*)malloc(sizeof(wchar_t) * 0x400);
+	
 }
 
 
 PEEditMessage::~PEEditMessage()
 {
-	if (edtHwnd != NULL) {
-		edtHwnd = NULL;
-	}
-	if (message != NULL) {
-		free(message);
-		message = NULL;
-	}
-	if (temChar != NULL) {
-		free(temChar);
-		temChar = NULL;
-	}
-}
-
-void PEEditMessage::setMessageText(HWND hDlg, BYTE *pointer) {
-	if (message == NULL || temChar == NULL) {
-		return;
-	}
-	memset(message, 0, sizeof(wchar_t) * 0x7530);
-	memset(temChar, 0, sizeof(wchar_t) * 0x400);
-
 	
-	additionalCharts(L"================================================================================================\r\n");
-	edtHwnd = GetDlgItem(hDlg, IDC_EDIT_MESSAGE);
-	SendMessage(edtHwnd, WM_SETTEXT, NULL, (WPARAM)message);
-} 
+}
 
-void PEEditMessage::additionalCharts(wchar_t *messageT) {
-	if (message == NULL || temChar == NULL) {
+void PEEditMessage::setMessageText(HWND hDlg, BYTE *pointer, DWORD fileSize) {
+	if ( fileSize == 0) {
 		return;
 	}
-	wsprintf(temChar, L"%s", messageT);
-	wcsncat_s(message, sizeof(wchar_t) * 0x400, temChar, _TRUNCATE);
-	memset(temChar, 0, sizeof(wchar_t) * 0x400);
+
+	//
+	HWND edtHwnd = GetDlgItem(hDlg, IDC_EDIT_MESSAGE);
+
+	SendMessageA(edtHwnd, EM_REPLACESEL, true, (long)"PE结构：\r\n--------------------------------------\r\n");
+
+
+	char strBuffer[10] = { 0 };
+	for (int i = 0; i < fileSize; i++)
+	{
+		memset(strBuffer, 0, 10);
+		sprintf_s(strBuffer, ((i+1) % 16 == 0) ? " %02X\r\n" : " %02X", (DWORD)*(pointer + i));
+
+		/* 以下两条语句为在edit中追加字符串 */
+		//SendMessageA(edtHwnd, EM_SETSEL, -2, -1);
+		SendMessageA(edtHwnd, EM_REPLACESEL, true, (long)strBuffer);
+
+		/* 设置滚轮到末尾，这样就可以看到最新信息 */
+		//SendMessageA(edtHwnd, WM_VSCROLL, SB_BOTTOM, 0);
+	}
+
 }
+

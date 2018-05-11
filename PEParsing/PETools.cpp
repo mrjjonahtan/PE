@@ -14,6 +14,9 @@
 #include <shellapi.h> 
 #pragma comment(lib, "shell32.lib")  
 
+
+DWORD fileSize = 0;
+
 //打开窗口
 void selectFile(HWND hDlg) {
 	OPENFILENAME ofn;
@@ -230,7 +233,7 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 			if (pointer != NULL) {
 				peem = new PEEditMessage();
 				if (peem != NULL) {
-					peem->setMessageText(hDlg, pointer);
+					peem->setMessageText(hDlg, pointer, fileSize);
 					delete(peem);
 					peem = NULL;
 				}
@@ -261,7 +264,7 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 /*pe*/
 void PEfun(wchar_t *path) {
 	FILE *filePointer = NULL;
-	DWORD size = 0;
+	//DWORD fileSize = 0;
 
 	fopen_s(&filePointer, ConvertLPWSTRToLPSTR(path), "rb");
 	if (filePointer == NULL) {
@@ -270,17 +273,17 @@ void PEfun(wchar_t *path) {
 	if (fseek(filePointer, 0L, SEEK_END)) {
 		return;
 	}
-	size = ftell(filePointer);
-	if (size == 0) {
+	fileSize = ftell(filePointer);
+	if (fileSize == 0) {
 		return;
 	}
-	pointer = (BYTE*)malloc(sizeof(BYTE)*size);
+	pointer = (BYTE*)malloc(sizeof(BYTE)*fileSize);
 	if (pointer == NULL) {
 		return;
 	}
-	memset(pointer, 0L, sizeof(BYTE)*size);
+	memset(pointer, 0L, sizeof(BYTE)*fileSize);
 	fseek(filePointer, 0L, 0L);
-	if (fread(pointer, sizeof(BYTE)*size, 1, filePointer) <= 0) {
+	if (fread(pointer, sizeof(BYTE)*fileSize, 1, filePointer) <= 0) {
 		return;
 	}
 	/*关闭filepoint*/
@@ -303,7 +306,7 @@ void PEfun(wchar_t *path) {
 		wcsncat_s(showMessage, enter, wcslen(enter));
 		wcsncat_s(showMessage, filesize, wcslen(filesize));
 		wchar_t sd[10] = { 0 };
-		_itow_s(size, sd, 10, 10);
+		_itow_s(fileSize, sd, 10, 10);
 		wcsncat_s(showMessage, sd, wcslen(sd));
 		wcsncat_s(showMessage, enter, wcslen(enter));
 		wcsncat_s(showMessage, filehead, wcslen(filehead));
