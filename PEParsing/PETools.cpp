@@ -81,6 +81,18 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 		DragFinish(hDrop);
 		break;
 	}
+	case WM_PAINT:
+	{
+		//
+		HWND edtHwnd = GetDlgItem(hDlg, IDC_EDIT_MESSAGE);
+
+		HFONT hFont = CreateFont(14, 8, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_CHARACTER_PRECIS,
+			CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, L"Hebrew");
+
+		SendMessage(edtHwnd, WM_SETFONT, (WPARAM)hFont, 1);
+
+	}
+	break;
 	case WM_COMMAND:
 	{
 		switch (LOWORD(wParam))
