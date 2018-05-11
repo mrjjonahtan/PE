@@ -63,6 +63,11 @@ INT_PTR CALLBACK DlgProcPEFile(HWND hDlg, UINT iMessage, WPARAM wParam, LPARAM l
 
 		SendMessage(staticDlg, WM_SETTEXT, NULL, (LPARAM)L"==================================\nÇëÑ¡ÔñÎÄ¼þ¡£\n==================================");
 		SendDlgItemMessage(hDlg, IDC_PE_OPEN_BTN, BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)LoadBitmap(PEInstance, MAKEINTRESOURCE(IDB_BITMAP_OPENFILE)));
+		
+		ChangeWindowMessageFilter(WM_DROPFILES, MSGFLT_ADD);
+		ChangeWindowMessageFilter(0x0049, MSGFLT_ADD);       // 0x0049 == WM_COPYGLOBALDATA
+
+		//::DragAcceptFiles(staticDlg, TRUE);
 		break;
 	}
 	case WM_DROPFILES:
