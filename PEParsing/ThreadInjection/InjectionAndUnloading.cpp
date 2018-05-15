@@ -1,6 +1,7 @@
 #include "..\stdafx.h"
-
+#include "..\Tools\Other\FilePath.h"
 #include "InjectionAndUnloading.h"
+
 
 
 InjectionAndUnloading::InjectionAndUnloading()
@@ -252,6 +253,23 @@ void InjectionAndUnloading::operating(HWND hDlg, int status)
 	{
 		if (status == 1)
 		{
+			FilePath pt;
+			wchar_t rootDirectory[MAX_PATH] = { 0 };
+			pt.getRootDirectory(rootDirectory, MAX_PATH);
+
+			wchar_t path[] = L"ResourceLibrary\\ProcessLoading\\ProcessIoading.exe";
+			wcsncat_s(rootDirectory, path, wcslen(path));
+
+			//create process
+			/*STARTUPINFO  si = { 0 };
+			PROCESS_INFORMATION pi;
+			si.cb = sizeof(si);*/
+			char param[0x256] = { 0 };
+			sprintf_s(param, "%ws %ws", rootDirectory, wPath);
+
+			//CreateProcess(NULL, param, NULL, NULL, FALSE, NULL, NULL, NULL, &si, &pi);
+
+			system(param);
 
 		}
 		else if (status == 2)

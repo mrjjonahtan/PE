@@ -95,9 +95,10 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <BaseAddress>0x2000000</BaseAddress>
-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <FixedBaseAddress>true</FixedBaseAddress>
+      <BaseAddress>
+      </BaseAddress>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <FixedBaseAddress>false</FixedBaseAddress>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -148,6 +149,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Tools\Other\FilePath.h">
+      <DeploymentContent>true</DeploymentContent>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="PEEncryptedshell\fileMallocPointer.h" />
     <ClInclude Include="ThreadInjection\InjectionAndUnloading.h" />
     <ClInclude Include="PEStructureAnalysis\index\PEBoundImport.h" />
@@ -169,6 +174,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Tools\Other\FilePath.cpp" />
     <ClCompile Include="PEEncryptedshell\fileMallocPointer.cpp" />
     <ClCompile Include="ThreadInjection\InjectionAndUnloading.cpp" />
     <ClCompile Include="PEStructureAnalysis\SourceCode\PEBoundImport.cpp" />

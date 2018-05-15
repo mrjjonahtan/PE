@@ -72,6 +72,9 @@
     <ClInclude Include="Tools\PE\PeToolsClass.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Tools\Other\FilePath.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -123,6 +126,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Tools\PE\PeToolsClass.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools\Other\FilePath.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
