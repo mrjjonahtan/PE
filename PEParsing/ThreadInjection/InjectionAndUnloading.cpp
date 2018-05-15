@@ -1,4 +1,5 @@
 #include "..\stdafx.h"
+
 #include "InjectionAndUnloading.h"
 
 
@@ -206,8 +207,9 @@ void InjectionAndUnloading::operating(HWND hDlg, int status)
 	int mwStatus = ::SendMessage(hMemoryWrite, BM_GETCHECK, NULL, NULL);
 	int plStatus = ::SendMessage(hProcessLoading, BM_GETCHECK, NULL, NULL);
 	int iStatus  = ::SendMessage(hInput, BM_GETCHECK, NULL, NULL);
-
-	if (rtStatus)
+	
+	//Thread
+	if (rtStatus == BST_CHECKED)
 	{
 		DWORD dPid = 0;
 		swscanf_s(wPid, L"%d", &dPid);
@@ -232,18 +234,43 @@ void InjectionAndUnloading::operating(HWND hDlg, int status)
 
 	}
 
-	if (mwStatus)
+	//Memory Write
+	if (mwStatus == BST_CHECKED)
 	{
-
+		if (status == 1)
+		{
+			
+		}
+		else if (status == 2)
+		{
+			
+		}
 	}
 
-	if (plStatus)
+	//Process Loading
+	if (plStatus == BST_CHECKED)
 	{
+		if (status == 1)
+		{
 
+		}
+		else if (status == 2)
+		{
+
+		}
 	}
 
-	if (iStatus)
+	//Input
+	if (iStatus == BST_CHECKED)
 	{
+		if (status == 1)
+		{
 
+		}
+		else if (status == 2)
+		{
+
+		}
 	}
+
 }
