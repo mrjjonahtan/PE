@@ -1,6 +1,6 @@
-#include "stdafx.h"
-#include "PEImport.h"
-#include "PeToolsClass.h"
+#include "..\..\stdafx.h"
+#include "..\index\PEImport.h"
+#include "..\..\Tools\PE\PeToolsClass.h"
 
 
 PEImport::PEImport()

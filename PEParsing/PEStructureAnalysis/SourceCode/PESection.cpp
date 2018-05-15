@@ -1,6 +1,6 @@
-#include "stdafx.h"
-#include "PESection.h"
-#include "PeToolsClass.h"
+#include "..\..\stdafx.h"
+#include "..\index\PESection.h"
+#include "..\..\Tools\PE\PeToolsClass.h"
 
 
 PESection::PESection()

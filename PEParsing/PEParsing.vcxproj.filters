@@ -27,46 +27,49 @@
     <ClInclude Include="PEParsing.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="PETools.h">
+    <ClInclude Include="ProcessLoading\ProcessLoading.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="PeFile.h">
+    <ClInclude Include="PEEncryptedshell\PEEncryptedshell.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="PeToolsClass.h">
+    <ClInclude Include="ThreadInjection\InjectionAndUnloading.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="PeOptional.h">
+    <ClInclude Include="PEEncryptedshell\fileMallocPointer.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="PeDirectory.h">
+    <ClInclude Include="PEStructureAnalysis\index\PeFile.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="PESection.h">
+    <ClInclude Include="PEStructureAnalysis\index\PeOptional.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="PEExport.h">
+    <ClInclude Include="PEStructureAnalysis\index\PeDirectory.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="PERelocation.h">
+    <ClInclude Include="PEStructureAnalysis\index\PESection.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="PEImport.h">
+    <ClInclude Include="PEStructureAnalysis\index\PEExport.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="PEBoundImport.h">
+    <ClInclude Include="PEStructureAnalysis\index\PERelocation.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="PEEditMessage.h">
+    <ClInclude Include="PEStructureAnalysis\index\PEImport.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="PEEncryptedshell.h">
+    <ClInclude Include="PEStructureAnalysis\index\PEBoundImport.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="fileMallocPointer.h">
+    <ClInclude Include="PEStructureAnalysis\index\PEEditMessage.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="InjectionAndUnloading.h">
+    <ClInclude Include="PEStructureAnalysis\index\PETools.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Tools\PE\PeToolsClass.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -77,46 +80,49 @@
     <ClCompile Include="PEParsing.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="PETools.cpp">
+    <ClCompile Include="ProcessLoading\ProcessLoading.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="PeFile.cpp">
+    <ClCompile Include="PEEncryptedshell\PEEncryptedshell.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="PeToolsClass.cpp">
+    <ClCompile Include="ThreadInjection\InjectionAndUnloading.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="PeOptional.cpp">
+    <ClCompile Include="PEEncryptedshell\fileMallocPointer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="PeDirectory.cpp">
+    <ClCompile Include="PEStructureAnalysis\SourceCode\PeFile.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="PESection.cpp">
+    <ClCompile Include="PEStructureAnalysis\SourceCode\PeOptional.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="PEExport.cpp">
+    <ClCompile Include="PEStructureAnalysis\SourceCode\PeDirectory.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="PERelocation.cpp">
+    <ClCompile Include="PEStructureAnalysis\SourceCode\PESection.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="PEImport.cpp">
+    <ClCompile Include="PEStructureAnalysis\SourceCode\PEExport.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="PEBoundImport.cpp">
+    <ClCompile Include="PEStructureAnalysis\SourceCode\PERelocation.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="PEEditMessage.cpp">
+    <ClCompile Include="PEStructureAnalysis\SourceCode\PEImport.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="PEEncryptedshell.cpp">
+    <ClCompile Include="PEStructureAnalysis\SourceCode\PEBoundImport.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="fileMallocPointer.cpp">
+    <ClCompile Include="PEStructureAnalysis\SourceCode\PEEditMessage.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="InjectionAndUnloading.cpp">
+    <ClCompile Include="PEStructureAnalysis\SourceCode\PETools.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools\PE\PeToolsClass.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

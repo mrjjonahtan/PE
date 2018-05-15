@@ -1,6 +1,6 @@
-#include "stdafx.h"
-#include "PeToolsClass.h"
-#include "PERelocation.h"
+#include "..\..\stdafx.h"
+#include "..\..\Tools\PE\PeToolsClass.h"
+#include "..\index\PERelocation.h"
 
 
 PERelocation::PERelocation()

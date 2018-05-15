@@ -1,6 +1,6 @@
-#include "stdafx.h"
-#include "PeDirectory.h"
-#include "PeToolsClass.h"
+#include "..\..\stdafx.h"
+#include "..\index\PeDirectory.h"
+#include "..\..\Tools\PE\PeToolsClass.h"
 
 
 PeDirectory::PeDirectory()

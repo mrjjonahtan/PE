@@ -1,6 +1,7 @@
-#include "stdafx.h"
-#include "PEBoundImport.h"
-#include "PeToolsClass.h"
+#include "..\..\stdafx.h"
+#include "..\index\PEBoundImport.h"
+#include "..\..\Tools\PE\PeToolsClass.h"
+
 #include <time.h> 
 
 PEBoundImport::PEBoundImport()

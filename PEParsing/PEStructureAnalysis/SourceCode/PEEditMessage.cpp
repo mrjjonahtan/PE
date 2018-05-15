@@ -1,6 +1,6 @@
-#include "stdafx.h"
-#include "PEEditMessage.h"
-#include "PeToolsClass.h"
+#include "..\..\stdafx.h"
+#include "..\index\PEEditMessage.h"
+#include "..\..\Tools\PE\PeToolsClass.h"
 
 //thread user
 HWND	hdlg = NULL;
@@ -27,7 +27,7 @@ DWORD WINAPI ThreadProc(LPVOID lpParam)
 
 	//
 	HWND edtHwnd = GetDlgItem(hdlg, IDC_EDIT_MESSAGE);
-	SendMessage(edtHwnd, WM_SETTEXT, NULL, (LPARAM)"");
+	SendMessage(edtHwnd, WM_SETTEXT, NULL, (LPARAM)L"");
 
 	SendMessageA(edtHwnd, EM_REPLACESEL, true, (long)"(PE潤更)   00  01  02  03  04  05  06  07  08  09  0a  0b  0c  0d  0e  0f\r\n！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！");
 

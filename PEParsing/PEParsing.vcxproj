@@ -85,7 +85,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
@@ -145,41 +145,43 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="fileMallocPointer.h" />
-    <ClInclude Include="InjectionAndUnloading.h" />
-    <ClInclude Include="PEBoundImport.h" />
-    <ClInclude Include="PeDirectory.h" />
-    <ClInclude Include="PEEditMessage.h" />
-    <ClInclude Include="PEEncryptedshell.h" />
-    <ClInclude Include="PEExport.h" />
-    <ClInclude Include="PeFile.h" />
-    <ClInclude Include="PEImport.h" />
-    <ClInclude Include="PeOptional.h" />
+    <ClInclude Include="PEEncryptedshell\fileMallocPointer.h" />
+    <ClInclude Include="ThreadInjection\InjectionAndUnloading.h" />
+    <ClInclude Include="PEStructureAnalysis\index\PEBoundImport.h" />
+    <ClInclude Include="PEStructureAnalysis\index\PeDirectory.h" />
+    <ClInclude Include="PEStructureAnalysis\index\PEEditMessage.h" />
+    <ClInclude Include="PEEncryptedshell\PEEncryptedshell.h" />
+    <ClInclude Include="PEStructureAnalysis\index\PEExport.h" />
+    <ClInclude Include="PEStructureAnalysis\index\PeFile.h" />
+    <ClInclude Include="PEStructureAnalysis\index\PEImport.h" />
+    <ClInclude Include="PEStructureAnalysis\index\PeOptional.h" />
     <ClInclude Include="PEParsing.h" />
-    <ClInclude Include="PERelocation.h" />
-    <ClInclude Include="PESection.h" />
-    <ClInclude Include="PETools.h" />
-    <ClInclude Include="PeToolsClass.h" />
+    <ClInclude Include="PEStructureAnalysis\index\PERelocation.h" />
+    <ClInclude Include="PEStructureAnalysis\index\PESection.h" />
+    <ClInclude Include="PEStructureAnalysis\index\PETools.h" />
+    <ClInclude Include="Tools\PE\PeToolsClass.h" />
+    <ClInclude Include="ProcessLoading\ProcessLoading.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="fileMallocPointer.cpp" />
-    <ClCompile Include="InjectionAndUnloading.cpp" />
-    <ClCompile Include="PEBoundImport.cpp" />
-    <ClCompile Include="PeDirectory.cpp" />
-    <ClCompile Include="PEEditMessage.cpp" />
-    <ClCompile Include="PEEncryptedshell.cpp" />
-    <ClCompile Include="PEExport.cpp" />
-    <ClCompile Include="PeFile.cpp" />
-    <ClCompile Include="PEImport.cpp" />
-    <ClCompile Include="PeOptional.cpp" />
+    <ClCompile Include="PEEncryptedshell\fileMallocPointer.cpp" />
+    <ClCompile Include="ThreadInjection\InjectionAndUnloading.cpp" />
+    <ClCompile Include="PEStructureAnalysis\SourceCode\PEBoundImport.cpp" />
+    <ClCompile Include="PEStructureAnalysis\SourceCode\PeDirectory.cpp" />
+    <ClCompile Include="PEStructureAnalysis\SourceCode\PEEditMessage.cpp" />
+    <ClCompile Include="PEEncryptedshell\PEEncryptedshell.cpp" />
+    <ClCompile Include="PEStructureAnalysis\SourceCode\PEExport.cpp" />
+    <ClCompile Include="PEStructureAnalysis\SourceCode\PeFile.cpp" />
+    <ClCompile Include="PEStructureAnalysis\SourceCode\PEImport.cpp" />
+    <ClCompile Include="PEStructureAnalysis\SourceCode\PeOptional.cpp" />
     <ClCompile Include="PEParsing.cpp" />
-    <ClCompile Include="PERelocation.cpp" />
-    <ClCompile Include="PESection.cpp" />
-    <ClCompile Include="PETools.cpp" />
-    <ClCompile Include="PeToolsClass.cpp" />
+    <ClCompile Include="PEStructureAnalysis\SourceCode\PERelocation.cpp" />
+    <ClCompile Include="PEStructureAnalysis\SourceCode\PESection.cpp" />
+    <ClCompile Include="PEStructureAnalysis\SourceCode\PETools.cpp" />
+    <ClCompile Include="Tools\PE\PeToolsClass.cpp" />
+    <ClCompile Include="ProcessLoading\ProcessLoading.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

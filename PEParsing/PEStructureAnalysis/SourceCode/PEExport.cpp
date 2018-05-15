@@ -1,6 +1,6 @@
-#include "stdafx.h"
-#include "PEExport.h"
-#include "PeToolsClass.h"
+#include "..\..\stdafx.h"
+#include "..\index\PEExport.h"
+#include "..\..\Tools\PE\PeToolsClass.h"
 
 PEExport::PEExport()
 {

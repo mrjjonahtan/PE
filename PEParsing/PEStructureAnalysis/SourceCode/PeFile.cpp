@@ -1,6 +1,6 @@
-#include "stdafx.h"
-#include "PeFile.h"
-#include "PeToolsClass.h"
+#include "..\..\stdafx.h"
+#include "..\index\PeFile.h"
+#include "..\..\Tools\PE\PeToolsClass.h"
 
 PeFile::PeFile()
 {

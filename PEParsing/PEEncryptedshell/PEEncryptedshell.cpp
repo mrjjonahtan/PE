@@ -1,7 +1,8 @@
-#include "stdafx.h"
-#include "PEEncryptedshell.h"
-#include "PeToolsClass.h"
+#include "..\stdafx.h"
 #include "fileMallocPointer.h"
+#include "PEEncryptedshell.h"
+
+#include "..\Tools\PE\PeToolsClass.h"
 
 
 PEEncryptedshell::PEEncryptedshell()

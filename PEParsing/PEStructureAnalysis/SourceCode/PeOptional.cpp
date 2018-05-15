@@ -1,6 +1,6 @@
-#include "stdafx.h"
-#include "PeOptional.h"
-#include "PeToolsClass.h"
+#include "..\..\stdafx.h"
+#include "..\index\PeOptional.h"
+#include "..\..\Tools\PE\PeToolsClass.h"
 
 
 PeOptional::PeOptional()
