@@ -261,15 +261,15 @@ void InjectionAndUnloading::operating(HWND hDlg, int status)
 			wcsncat_s(rootDirectory, path, wcslen(path));
 
 			//create process
-			/*STARTUPINFO  si = { 0 };
+			STARTUPINFO  si = { 0 };
 			PROCESS_INFORMATION pi;
-			si.cb = sizeof(si);*/
-			char param[0x256] = { 0 };
-			sprintf_s(param, "%ws %ws", rootDirectory, wPath);
+			si.cb = sizeof(si);
+			wchar_t param[0x256] = { 0 };
+			swprintf_s(param, L"%s %s", rootDirectory, wPath);
 
-			//CreateProcess(NULL, param, NULL, NULL, FALSE, NULL, NULL, NULL, &si, &pi);
+			CreateProcess(NULL, param, NULL, NULL, FALSE, NULL, NULL, NULL, &si, &pi);
 
-			system(param);
+			//system(param);
 
 		}
 		else if (status == 2)
